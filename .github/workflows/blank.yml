@@ -36,11 +36,17 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
 
-  build2:
+  build-dev:
     needs: build
     uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
     with:
-      campo-novo: "Horacio Vasconcellos"
+      campo-novo: "Horacio Vasconcellos Desenvolvimento"
+  
+  build-hml:
+    needs: build
+    uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
+    with:
+      campo-novo: "Horacio Vasconcellos Homolocação"
       
   teste:
     needs: build
