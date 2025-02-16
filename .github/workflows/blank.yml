@@ -35,19 +35,6 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-
-  build-dev:
-    needs: build
-    uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
-    with:
-      campo-novo: "Horacio Vasconcellos Desenvolvimento"
-  
-  build-hml:
-    needs: build
-    uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
-    with:
-      campo-novo: "Horacio Vasconcellos Homolocação"
-      
   teste:
     needs: build
     # The type of runner that the job will run on
@@ -57,8 +44,21 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
-  termino:
+
+  build-dev:
     needs: teste
+    uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
+    with:
+      campo-novo: "Horacio Vasconcellos Desenvolvimento"
+  
+  build-hml:
+    needs: build-dev
+    uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
+    with:
+      campo-novo: "Horacio Vasconcellos Homolocação"
+      
+  termino:
+    needs: build-hml
     #runs-on: self-hosted
     runs-on: ubuntu-24.04
     environment: DESENVOLVIMENTO
