@@ -18,7 +18,8 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: self-hosted
+    # runs-on: self-hosted
+    runs-on: ubuntu-24.04
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -37,8 +38,26 @@ jobs:
   teste:
     needs: build
     # The type of runner that the job will run on
-    runs-on: self-hosted
+    #runs-on: self-hosted
+    runs-on: ubuntu-24.04
     steps:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
+  termino:
+    needs: teste
+    #runs-on: self-hosted
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Enviar email de notificação
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASS }}
+          subject: "GitHub Actions Finalizado"
+          to: horacio.vasconcellos@gmail.com
+          from: "GitHub Actions <seu-email@example.com>"
+          body: "O workflow foi finalizado com sucesso!"
+  
