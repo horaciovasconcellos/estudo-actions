@@ -35,6 +35,10 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
+        with:
+          campo-novo: "Horacio Vasconcellos"
   teste:
     needs: build
     # The type of runner that the job will run on
