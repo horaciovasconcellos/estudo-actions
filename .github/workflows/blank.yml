@@ -50,6 +50,9 @@ jobs:
     runs-on: ubuntu-24.04
     environment: DESENVOLVIMENTO
     steps:
+      - name: Run a one-line script
+        run: echo Hello, world ${{ vars.USUARIO_DEMO}} !
+
       - name: Enviar email de notificação
         uses: dawidd6/action-send-mail@v3
         with:
