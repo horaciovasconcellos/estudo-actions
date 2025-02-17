@@ -1,0 +1,12 @@
+name: Crontab
+on:
+  schedule:
+    - cron: '*/2 * * * *'
+
+jobs:
+  inicio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Impressao do Nome'
+        run: echo 'horacio'
+    
