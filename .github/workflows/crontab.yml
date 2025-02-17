@@ -1,3 +1,4 @@
+name: Crontab Exemplo
 on:
   schedule:
     - cron: '*/2 * * * *'
