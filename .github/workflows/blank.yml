@@ -50,8 +50,9 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-  teste:
+  build-dev:
     needs: build
+    environment: DESENVOLVIMENTO
     # The type of runner that the job will run on
     #runs-on: self-hosted
     # runs-on: ubuntu-24.04
@@ -62,18 +63,19 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
-  build-dev:
-    needs: teste
+  build-hml:
+    needs: build-dev
+    environment: HOMOLOGACAO
+    runs-on: [ self-hosted, Linux ]
     uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
     with:
       campo-novo: "Horacio Vasconcellos Desenvolvimento"
   
-  build-hml:
-    needs: build-dev
+  build-prd:
+    needs: build-hml
     uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
     with:
-      campo-novo: "Horacio Vasconcellos Homolocação"
-      
+      campo-novo: "Horacio Vasconcellos Homolocação"    
   termino:
     needs: build-hml
     #runs-on: self-hosted
