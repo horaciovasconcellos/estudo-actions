@@ -11,22 +11,22 @@ on:
     branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-    inputs:
-      runner:
-        description: 'Runner para a execução'
-        required: true
-        default: 'ubuntu-24.04'  # valor padrão
-        options:
-          - ubuntu-24.04
-          - self-hosted
-      language:
-        description: 'Escolha a linguagem para self-hosted'
-        required: false  # A linguagem é necessária apenas se for self-hosted
-        options:
-            - Linux
-            - macOS
-        default: Linux
+  #workflow_dispatch:
+  #  inputs:
+  #    runner:
+  #      description: 'Runner para a execução'
+  #      required: true
+  #      default: 'ubuntu-24.04'  # valor padrão
+  #      options:
+  #        - ubuntu-24.04
+  #        - self-hosted
+  #    language:
+  #      description: 'Escolha a linguagem para self-hosted'
+  #      required: false  # A linguagem é necessária apenas se for self-hosted
+  #      options:
+  #          - Linux
+  #          - macOS
+  #      default: Linux
       
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
