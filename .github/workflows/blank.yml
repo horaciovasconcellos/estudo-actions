@@ -13,11 +13,21 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      campo-novo:
+      runner:
+        description: 'Runner para a execução'
         required: true
-        type: string
-       
-
+        default: 'ubuntu-24.04'  # valor padrão
+        options:
+          - ubuntu-24.04
+          - self-hosted
+      language:
+        description: 'Escolha a linguagem para self-hosted'
+        required: false  # A linguagem é necessária apenas se for self-hosted
+        options:
+            - Linux
+            - macOS
+        default: Linux
+      
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -25,7 +35,7 @@ jobs:
     # The type of runner that the job will run on
     # runs-on: self-hosted
     # runs-on: [ self-hosted, macOS ] # Procura o self-host com o Label macOS
-    runs-on: [ self-hosted, Linux ] # Procura o self-host com o Label macOS
+    runs-on: ${{ github.event.inputs.runner }} , ${{ github.event.inputs.language }} # Procura o self-host com o Label macOS
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -45,7 +55,7 @@ jobs:
     # The type of runner that the job will run on
     #runs-on: self-hosted
     # runs-on: ubuntu-24.04
-    runs-on: [ self-hosted, Linux ]
+    runs-on: ${{ github.event.inputs.runner }} , ${{ github.event.inputs.language }}
     steps:
       # Runs a single command using the runners shell
       - name: Run a one-line script
