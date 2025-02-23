@@ -24,8 +24,8 @@ jobs:
   build:
     # The type of runner that the job will run on
     # runs-on: self-hosted
-    runs-on: [ self-hosted, macOS ] # Procura o self-host com o Label macOS
-
+    # runs-on: [ self-hosted, macOS ] # Procura o self-host com o Label macOS
+    runs-on: [ self-hosted, Linux ] # Procura o self-host com o Label macOS
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -44,7 +44,8 @@ jobs:
     needs: build
     # The type of runner that the job will run on
     #runs-on: self-hosted
-    runs-on: ubuntu-24.04
+    # runs-on: ubuntu-24.04
+    runs-on: [ self-hosted, Linux ]
     steps:
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -65,7 +66,8 @@ jobs:
   termino:
     needs: build-hml
     #runs-on: self-hosted
-    runs-on: ubuntu-24.04
+    # runs-on: ubuntu-24.04
+    runs-on: [ self-hosted, Linux ]
     environment: DESENVOLVIMENTO
     steps:
       - name: Run a one-line script
