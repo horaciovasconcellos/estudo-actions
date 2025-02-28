@@ -2,7 +2,7 @@ name: 02-workflow
 on: push
 jobs:
   developer:
-    - name: Passo 1
+    - name: Checkout do Repositorio
       uses: actions/checkout@v4
 
     - name: Passo 2
