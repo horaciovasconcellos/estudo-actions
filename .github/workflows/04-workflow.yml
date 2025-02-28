@@ -1,6 +1,5 @@
 name: 04-workflow
   on: push
-#  workflow_dispatch:
 
 jobs:
   dev:
