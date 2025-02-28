@@ -26,6 +26,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
       - name: Configure Git user
         run: |
           git config user.email "horacio.vasconcellos@gmail.com"
@@ -46,7 +47,8 @@ jobs:
                 "username": "${{ github.actor }}",
                 "password": "${{ secrets.RELEASE_TOKEN }}"
               }]
-      
+         continue-on-error: true
+ 
       - name: Prepare Release
         run: |
           set -e
@@ -54,6 +56,11 @@ jobs:
           -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
           -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }} \
           -DtagNameFormat=v@{project.version}
+        if: success()
+
+      - name: Notificar erro no Slack
+        run: echo "Erro nos testes!"
+        if: failure()      
       
       - name: Perform Release
         run: mvn release:perform
@@ -63,11 +70,6 @@ jobs:
           set -e
           git push origin main
           git push origin --tags
-
-      - name: Set up Maven
-        uses: s4u/maven-settings-action@v2.5.0
-        with:
-          maven-version: '3.9.9'
 
       # Passo para rodar o Liquibase com o Maven
       - name: Update Database with Liquibase
