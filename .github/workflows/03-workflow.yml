@@ -28,13 +28,15 @@ jobs:
           cache: maven
       - name: Configure Git user
         run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
+          git config user.email "horacio.vasconcellos@gmail.com"
+          git config user.name "Horacio Vasconcellos"
+
       - name: Commit Changelog
         run: |
           git add CHANGELOG.md
           git commit -m "docs: update changelog for version ${{ github.event.inputs.releaseVersion }}"
           git push origin main
+
       - name: Setup Maven settings.xml
         uses: s4u/maven-settings-action@v3.0.0
         with:
