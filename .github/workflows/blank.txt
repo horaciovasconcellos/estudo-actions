@@ -62,22 +62,14 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: echo Hello, world!
-
-  build-hml:
-    needs: build-dev
-    environment: HOMOLOGACAO
-    runs-on: [ self-hosted, Linux ]
-    uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
-    with:
-      campo-novo: "Horacio Vasconcellos Desenvolvimento"
   
   build-prd:
-    needs: build-hml
+    needs: build-dev
     uses: horaciovasconcellos/reuse-estudo-actions/.github/workflows/demo-deploy.yml@main
     with:
       campo-novo: "Horacio Vasconcellos Homolocação"    
   termino:
-    needs: build-hml
+    needs: build-prd
     #runs-on: self-hosted
     # runs-on: ubuntu-24.04
     runs-on: [ self-hosted, Linux ]
