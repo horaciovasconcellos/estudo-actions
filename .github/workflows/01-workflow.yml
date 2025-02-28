@@ -1,0 +1,9 @@
+name: 01-workflow
+on: push
+
+jobs:
+  nome-01:
+    runs-on: [ self-hosted, Linux ] 
+    steps: 
+      - name: Passo 1
+        run: echo Hello, world!
