@@ -37,7 +37,6 @@ jobs:
 #          git add CHANGELOG.md
 #          git commit -m "docs: update changelog for version ${{ github.event.inputs.releaseVersion }}"
 #          git push origin main
-
       - name: Setup Maven settings.xml
         uses: s4u/maven-settings-action@v3.0.0
         with:
@@ -47,7 +46,7 @@ jobs:
                 "username": "${{ github.actor }}",
                 "password": "${{ secrets.RELEASE_TOKEN }}"
               }]
-         continue-on-error: true
+        continue-on-error: true
  
       - name: Prepare Release
         run: |
