@@ -1,9 +1,10 @@
-name: 04-workflow
-  on: push
+name: Demo04
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
 
 jobs:
   dev:
     runs-on: [ self-hosted, Linux ]
     steps:
-      - name: Passo 1
-        run: echo "Teste 1"
+      - name: Passo 01
+        run:  echo  "Teste"
