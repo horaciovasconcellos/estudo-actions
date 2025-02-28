@@ -1,0 +1,9 @@
+name: 02-workflow
+on: push
+jobs:
+  developer:
+    - name: Passo 1
+      uses: actions/checkout@v4
+
+    - name: Passo 2
+      run: echo Sequencia 1
