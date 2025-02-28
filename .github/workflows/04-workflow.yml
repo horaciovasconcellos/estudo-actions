@@ -1,8 +1,6 @@
 name: Demo04
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: 
-  push
-
+on:
   workflow_dispatch:
 workflow_dispatch: 
 jobs:
