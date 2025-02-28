@@ -2,6 +2,7 @@ name: Demo04
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 
+workflow_dispatch: 
 jobs:
   dev:
     runs-on: [ self-hosted, Linux ]
