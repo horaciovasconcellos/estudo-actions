@@ -7,3 +7,10 @@ jobs:
     steps: 
       - name: Passo 1
         run: echo Hello, world!
+  nome-02:
+    runs-on: [ self-hosted, Linux ]
+    needs: nome-01
+    steps:
+      - name: Passo 2
+        run: echo Hello, world!
+
