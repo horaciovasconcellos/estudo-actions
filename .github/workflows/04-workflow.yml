@@ -1,0 +1,12 @@
+name: 04-workflow
+
+on: push
+
+workflow_dispath:
+
+jobs:
+  dev:
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Passo 1
+        run: echo "Teste 1"
