@@ -1,5 +1,6 @@
 name: 02-workflow
-on: push
+on: 
+   workflow_dispatch:
 jobs:
   developer:
     - name: Checkout do Repositorio
