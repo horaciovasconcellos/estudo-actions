@@ -1,10 +1,9 @@
-name: 01workflow
+name: 01-workflow
 on: 
    workflow_dispatch:
-
 jobs:
   nome-01:
-    runs-on: [ self-hosted, Linux ] 
+    runs-on: self-hosted
     steps: 
       - name: Passo 1
         run: echo Hello, world!

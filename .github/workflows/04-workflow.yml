@@ -1,10 +1,10 @@
-name: Demo04
+name: 04-workflow
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
-workflow_dispatch:
+  workflow_dispatch:
 jobs:
   dev:
-    runs-on: [ self-hosted, Linux ]
+    runs-on: self-hosted
     steps:
       - name: Passo 01
         run:  echo  "Teste"
