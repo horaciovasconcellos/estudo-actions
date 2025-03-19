@@ -1,13 +1,7 @@
 name: Demo04
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: push
-  workflow_dispatch:
-<<<<<<< HEAD
-
-||||||| parent of 5bb87f4 (<doc> versão v01.00.01)
-workflow_dispatch: 
-=======
->>>>>>> 5bb87f4 (<doc> versão v01.00.01)
+on:
+workflow_dispatch:
 jobs:
   dev:
     runs-on: [ self-hosted, Linux ]
