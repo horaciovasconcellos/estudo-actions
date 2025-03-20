@@ -21,13 +21,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: akhileshns/heroku-deploy@v3.12.12
-      with:
-        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: "60pportunities-simple-app"
-        heroku_email: "horacio.vasconcellos@gmail.com"
-          
+    - uses: actions/checkout@v4          
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
@@ -36,3 +30,15 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+        - uses: akhileshns/heroku-deploy@v3.12.12
+          with:
+               heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+               heroku_app_name: "60pportunities-simple-app"
+               heroku_email: "horacio.vasconcellos@gmail.com"
+              
