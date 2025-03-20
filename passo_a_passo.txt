@@ -1,0 +1,93 @@
+# CI/CD GitHub Actions → Heroku
+
+1) **Create Your Node.js Application:**
+
+mkdir simple-node-api
+cd simple-node-api
+npm init -y
+
+2) **Install nodemon and express:**
+
+npm install -D nodemon 
+npm install express
+
+3) **Add scripts to package.json:**
+
+"scripts": {
+   "test": "echo \"Error: no test specified\" && exit 1",
+   "start": "node index.js",
+   "dev": "nodemon index.js"
+}
+
+4) **Add an `index.js` file that defines one primary GET endpoint:**
+
+const express = require('express');
+const port = process.env.PORT || 8000;
+const app = express();
+
+app.get('/', (req, res) => {
+   res.send('Hello World!');
+});
+
+app.listen(port, () => { console.log('Our App Is Up And Running!'); });
+module.exports = app
+
+5) **Run the app locally, using `npm run dev`**
+
+6) **Test `http://localhost:8000`**
+
+7) **Add Automated Tests**
+
+npm install -D mocha supertest
+
+8) **Create a test directory within your simple-node-api directory, and add a small test.js file:**
+
+const request = require("supertest");
+const app = require("../index");
+
+describe("GET /", () => {
+   it("responds with Hello World!", (done) => {
+      request(app).get("/").expect("Hello World!", done);
+   })
+});
+
+9) **Before you’re able to run your test, you’ll also need to modify your package.json:**
+
+"scripts": {
+   "test": "mocha ./test/* --exit",
+   "dev": "nodemon index.js"
+}
+
+10) **Setup git:**
+
+**echo node_modules > .gitignore
+git init
+git remote add origin** https://github.com/horaciovasconcellos/estudo-actions.git
+**git add .
+git commit -m "chore: initial commit"
+git push origin master**
+
+11) **Setup GitHub actions CI:**
+
+![Screen Shot 2021-11-09 at 14.58.03.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/a3cc0b4c-e996-49f5-a067-ed9b5a2e0bf3/Screen_Shot_2021-11-09_at_14.58.03.png)
+
+12) **Start commit and Commit new file.**
+
+13) **Setup CD → Heroku:**
+
+**To start, register for Heroku. Click on your profile image in the upper right and choose Account Settings. Scroll down to the API Key section. Click Reveal and then *copy the key*.**
+
+13.5) **Copy Heroku API Key to a new SECRET in GitHub (go to Settings → Secret → New Repository Secret → HEROKU_API_KEY and Paste your Key as value)**
+
+14) **Open up the node.js.yml file in your project. We already have a job called `build`. We’re now going to add a job called `deploy` (NOTE: whitespace matters with YAML. The deploy section should be at the same indentation as the `build` section):**
+
+deploy: 
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v4
+        - uses: akhileshns/heroku-deploy@v3.12.12
+            with:
+                heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+                heroku_app_name: "60pportunities-simple-app""
+                heroku_email: "horacio.vasconcellos@gmail.com"
