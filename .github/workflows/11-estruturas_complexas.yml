@@ -1,5 +1,4 @@
 name: 11-estruturas_complexas
-
 on:
   workflow_dispatch:
     inputs:
@@ -9,9 +8,8 @@ on:
         default: '{"name": "John", "age": 30, "skills": ["Git", "YAML"]}'
 
 jobs:
-  # SEQUÊNCIAS (listas)
   sequence-example:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Exemplo de sequência
         run: |
@@ -24,73 +22,3 @@ jobs:
           for cmd in "${commands[@]}"; do
             eval "$cmd"
           done
-
-  # MAPPINGS (dicionários/objetos)
-  mapping-example:
-    runs-on: ubuntu-latest
-    env:
-      *shared-env  # Usando o alias para shared-env
-    steps:
-      - name: Exemplo de mapping
-        env:
-          USER_DATA: ${{ inputs.user-data }}
-          TEAM_MEMBERS: >
-            [
-              {"name": "Alice", "role": "dev"},
-              {"name": "Bob", "role": "qa"}
-            ]
-        run: |
-          echo "## Exemplo de Mapping"
-          echo "Versão do Node: $NODE_VERSION"
-          echo "Versão do Python: $PYTHON_VERSION"
-          echo "Dados do usuário: $USER_DATA"
-          echo "Membros do time: $TEAM_MEMBERS"
-
-  # ESTRUTURAS DE DADOS COMPLEXAS
-  complex-data-structures:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Processar dados complexos
-        id: process-data
-        env:
-          COMPLEX_DATA: |
-            {
-              "project": "Demo",
-              "config": {
-                "debug": true,
-                "settings": ["auto-save", "lint-on-fly"]
-              },
-              "team": {
-                "lead": {"name": "Carol", "exp": 5},
-                "members": 3
-              }
-            }
-        run: |
-          echo "## Estrutura de dados complexa"
-          echo "$COMPLEX_DATA" | jq .
-          echo "Nome do projeto: $(echo "$COMPLEX_DATA" | jq -r '.project')"
-          
-          # Salvando output para uso posterior
-          echo "project_name=$(echo "$COMPLEX_DATA" | jq -r '.project')" >> $GITHUB_OUTPUT
-
-
-
-  # MULTI-LINE STRINGS
-  multiline-example:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Exemplo de string multi-linha
-        run: |
-          echo "## String multi-linha com pipe (|)"
-          cat <<EOF
-          Esta é uma string multi-linha
-          que preserva quebras de linha
-          e identação.
-          EOF
-          
-          echo "## String multi-linha com maior que (>)"
-          echo "
-          Esta é outra forma de string multi-linha
-          onde as quebras são convertidas em espaços
-          mas é mais compacta.
-          " | tr -d '\n'
