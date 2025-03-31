@@ -39,3 +39,9 @@ jobs:
         run: |
           echo "Valor do Inteiro : $valorinteiro - ${{ inputs.cor }}"
           echo test, and deploy your project.
+     
+      - name: Show warning
+        run: echo "::warning::Esta é uma mensagem de alerta importante"
+  
+      - name: Show notice
+        run: echo "::notice::Esta é uma mensagem informativa"
