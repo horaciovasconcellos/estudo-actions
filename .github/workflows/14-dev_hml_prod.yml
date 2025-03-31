@@ -1,0 +1,70 @@
+name: 14-dev_hml_prod.yml
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente específico (opcional)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - dev
+        - staging
+        - production
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        environment: ['dev', 'staging', 'production']
+        include:
+          - environment: dev
+            secret_prefix: 'DEV_'
+          - environment: staging
+            secret_prefix: 'STAGING_'
+          - environment: production
+            secret_prefix: 'PROD_'
+        exclude: ${{ fromJson(needs.setup.outputs.excluded_environments) }}
+    
+    if: ${{ github.event.inputs.environment == 'all' || github.event.inputs.environment == matrix.environment }}
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar variáveis do ambiente ${{ matrix.environment }}
+        env:
+          # Secrets genéricos (disponíveis em todos os ambientes)
+          COMMON_DB_URL: ${{ secrets.COMMON_DB_URL }}
+          
+          # Secrets específicos do ambiente
+          ENV_DB_URL: ${{ secrets[format('{0}DB_URL', matrix.secret_prefix)] }}
+          ENV_API_KEY: ${{ secrets[format('{0}API_KEY', matrix.secret_prefix)] }}
+          ENV_SECRET: ${{ secrets[format('{0}SECRET', matrix.secret_prefix)] }}
+        run: |
+          echo "ENVIRONMENT=${{ matrix.environment }}" >> $GITHUB_ENV
+          echo "DB_URL=$ENV_DB_URL" >> $GITHUB_ENV
+          echo "API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
+          echo "COMMON_DB_URL=$COMMON_DB_URL" >> $GITHUB_ENV
+          
+          # Máscara os valores sensíveis nos logs
+          echo "::add-mask::$ENV_API_KEY"
+          echo "::add-mask::$ENV_SECRET"
+
+      - name: Verificar variáveis (debug seguro)
+        run: |
+          echo "Ambiente: $ENVIRONMENT"
+          echo "DB_URL configurada"
+          echo "API_KEY disponível (valor oculto por segurança)"
+          echo "Common DB: $COMMON_DB_URL"
+
+      - name: Executar deploy no ambiente ${{ matrix.environment }}
+        run: |
+          echo "Iniciando deploy no ambiente $ENVIRONMENT"
+          # Exemplo usando as variáveis
+          #./deploy.sh \
+          #  --env $ENVIRONMENT \
+          #  --db-url "$DB_URL" \
+          #  --api-key "$API_KEY"
