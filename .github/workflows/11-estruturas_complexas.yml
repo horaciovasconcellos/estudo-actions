@@ -1,9 +1,5 @@
 name: 11-estruturas_complexas
 
-env: &shared-env
-  NODE_VERSION: 18.x
-  PYTHON_VERSION: 3.10
-
 on:
   workflow_dispatch:
     inputs:
