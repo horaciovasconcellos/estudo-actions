@@ -5,15 +5,16 @@ name: 10-workflow
 # Controls when the workflow will run
 on:
  workflow_dispatch:  
-  inputs:
-      colors:
-        description: 'Lista de cores separadas por vírgula'
-        options:
-           - Azul
-           - Verde
-           - Amarelo
+    inputs:
+      cor:
+        description: 'Escolha uma cor'
+        type: choice
         required: true
-        default: Verde
+        options:
+          - Azul
+          - Amarelo
+          - Verde
+        default: 'Azul'
 env:
   valorstring: "Horacio Vasconcellos"
   valorinteiro: 42
