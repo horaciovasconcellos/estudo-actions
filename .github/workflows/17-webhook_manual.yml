@@ -1,0 +1,59 @@
+name: 17-webhook_manual
+# Necessário para autenticar as chamadas à API do GitHub
+# Vá em Settings > Developer settings > Personal access tokens > Tokens (classic)
+# Crie um token com escopo 'repo' e 'workflow'
+#curl -X POST \
+#  -H "Authorization: token SEU_PAT_AQUI" \
+#  -H "Accept: application/vnd.github.v3+json" \
+#  https://api.github.com/repos/horaciovasconcellos/estudo-actions/hooks \
+#  -d '{
+#    "name": "web",
+#    "active": true,
+#    "events": ["repository_dispatch"],
+#    "config": {
+#      "url": "https://api.github.com/repos/horaciovasconcellos/estudo-actions/dispatches",
+#      "content_type": "json",
+#      "secret": "SEU_SEGREDO_AQUI"
+#    }
+#  }'
+
+on:
+  repository_dispatch:
+    types: [webhook_trigger]
+  workflow_dispatch:
+
+jobs:
+  process-webhook:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log received payload
+        run: |
+          echo "Event payload: ${{ toJson(github.event.client_payload) }}"
+          echo "Event type: ${{ github.event.action }}"
+          
+      - name: Processar dados do webhook
+        env:
+          CUSTOM_DATA: ${{ github.event.client_payload.custom_data }}
+          BRANCH: ${{ github.event.client_payload.branch || 'main' }}
+        run: |
+          echo "Processando webhook com dados: $CUSTOM_DATA"
+          echo "Target branch: $BRANCH"
+          
+          # Exemplo: execute comandos baseados nos dados do webhook
+          if [ "$CUSTOM_DATA" == "deploy" ]; then
+            echo "Iniciando processo de deploy..."
+            # Adicione seus comandos de deploy aqui
+          elif [ "$CUSTOM_DATA" == "test" ]; then
+            echo "Iniciando testes..."
+            # Adicione seus comandos de teste aqui
+          else
+            echo "Ação padrão para dados recebidos"
+          fi
+
+      - name: Notify result
+        if: always()
+        run: |
+          echo "Workflow concluído com status ${{ job.status }}"
