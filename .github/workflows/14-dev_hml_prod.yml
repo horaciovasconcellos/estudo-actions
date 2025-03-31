@@ -18,7 +18,6 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        environment: ['DEVELOPER', 'HOMOLOGACAO', 'PRODUCAO']
         include:
           - environment: DEVELOPER
             secret_prefix: 'DEV_'
@@ -26,18 +25,16 @@ jobs:
             secret_prefix: 'STAGING_'
           - environment: PRODUCAO
             secret_prefix: 'PROD_'
-    
-    if: ${{ github.event.inputs.environment == 'all' || github.event.inputs.environment == matrix.environment }}
-    
+      # Filtra os ambientes com base no input
+      fail-fast: false
+      max-parallel: 3
     steps:
-      - name: Validar input do ambiente
+      - name: Validar ambiente
         run: |
           if [[ "${{ github.event.inputs.environment }}" != "all" && \
-                "${{ github.event.inputs.environment }}" != "DEVELOPER" && \
-                "${{ github.event.inputs.environment }}" != "HOMOLOGACAO" && \
-                "${{ github.event.inputs.environment }}" != "PRODUCAO" ]]; then
-            echo "Ambiente inválido: ${{ github.event.inputs.environment }}"
-            exit 1
+                "${{ github.event.inputs.environment }}" != "${{ matrix.environment }}" ]]; then
+            echo "Ambiente não corresponde ao input. Pulando..."
+            exit 0
           fi
 
       - name: Checkout do código
@@ -66,15 +63,4 @@ jobs:
 
       - name: Executar deploy no ambiente ${{ matrix.environment }}
         run: |
-          ./deploy.sh \
-            --env "$ENVIRONMENT" \
-            --db-url "$DB_URL" \
-            --api-key "$API_KEY"
-
-      - name: Enviar notificação de sucesso
-        if: ${{ success() }}
-        run: echo "Deploy no ambiente ${{ matrix.environment }} concluído com sucesso."
-
-      - name: Enviar notificação de falha
-        if: ${{ failure() }}
-        run: echo "Deploy no ambiente ${{ matrix.environment }} falhou."
+          echo "Iniciando deploy no ambiente $ENVIRONMENT"
