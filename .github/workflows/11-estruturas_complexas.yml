@@ -1,11 +1,5 @@
 name: 11-estruturas_complexas
 
-# Anchors (&) e Aliases (*) - para reutilização de definições
-
-defaults: &default-config
-  timeout-minutes: 30
-  shell: bash
-
 env: &shared-env
   NODE_VERSION: 18.x
   PYTHON_VERSION: 3.10
@@ -59,8 +53,6 @@ jobs:
   # ESTRUTURAS DE DADOS COMPLEXAS
   complex-data-structures:
     runs-on: ubuntu-latest
-    defaults:
-      *default-config  # Usando o alias para defaults
     steps:
       - name: Processar dados complexos
         id: process-data
@@ -85,8 +77,7 @@ jobs:
           # Salvando output para uso posterior
           echo "project_name=$(echo "$COMPLEX_DATA" | jq -r '.project')" >> $GITHUB_OUTPUT
 
-      - name: Usar output do passo anterior
-        run: echo "Projeto processado: ${{ steps.process-data.outputs.project_name }}"
+
 
   # MULTI-LINE STRINGS
   multiline-example:
