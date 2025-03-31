@@ -9,22 +9,22 @@ on:
         type: choice
         options:
         - all
-        - dev
-        - staging
-        - production
+        - DEVELOPER
+        - HOMOLOGACAO
+        - PRODUCAO
 
 jobs:
   deploy:
     runs-on: self-hosted
     strategy:
       matrix:
-        environment: ['dev', 'staging', 'production']
+        environment: ['DEVELOPER', 'HOMOLOGACAO', 'PRODUCAO']
         include:
-          - environment: dev
+          - environment: DEVELOPER
             secret_prefix: 'DEV_'
-          - environment: staging
+          - environment: HOMOLOGACAO
             secret_prefix: 'STAGING_'
-          - environment: production
+          - environment: PRODUCAO
             secret_prefix: 'PROD_'
         exclude: ${{ fromJson(needs.setup.outputs.excluded_environments) }}
     
