@@ -1,0 +1,142 @@
+name: Exemplos Avançados de YAML
+
+on:
+  workflow_dispatch:
+    inputs:
+      config-data:
+        description: 'Dados de configuração em JSON'
+        required: false
+        default: '{"environment":"prod","features":["logging","monitoring"]}'
+
+jobs:
+  ## 1. SEQUÊNCIAS (listas)
+  sequencias:
+    name: Exemplo de Sequências
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lista simples
+        run: |
+          echo "## Lista de linguagens"
+          languages=(
+            "Python"
+            "JavaScript"
+            "Go"
+            "Ruby"
+          )
+          for lang in "${languages[@]}"; do
+            echo "Linguagem: $lang"
+          done
+
+      - name: Lista de objetos
+        env:
+          SERVICES: '[
+            {"name": "api", "port": 8080},
+            {"name": "db", "port": 5432}
+          ]'
+        run: |
+          echo "## Serviços configurados"
+          echo "$SERVICES" | jq -c '.[]' | while read service; do
+            name=$(echo "$service" | jq -r '.name')
+            port=$(echo "$service" | jq -r '.port')
+            echo "Serviço $name roda na porta $port"
+          done
+
+  ## 2. MAPPINGS (dicionários)
+  mappings:
+    name: Exemplo de Mappings
+    runs-on: ubuntu-latest
+    env:
+      APP_CONFIG: &app-config  # Anchor para reutilização
+        database:
+          host: "db.production"
+          port: 5432
+          credentials:
+            user: "admin"
+            password: ${{ secrets.DB_PASSWORD }}
+        cache:
+          enabled: true
+          ttl: 3600
+
+    steps:
+      - name: Acessar mapping
+        env:
+          CONFIG: *app-config  # Alias para o anchor
+        run: |
+          echo "## Configuração do aplicativo"
+          echo "Host do banco: $(echo "$CONFIG" | jq -r '.database.host')"
+          echo "TTL do cache: $(echo "$CONFIG" | jq -r '.cache.ttl')"
+
+  ## 3. ESTRUTURAS DE DADOS COMPLEXAS
+  estruturas-complexas:
+    name: Estruturas Complexas
+    runs-on: ubuntu-latest
+    steps:
+      - name: Processar estrutura complexa
+        env:
+          PROJECT_DATA: |
+            {
+              "name": "E-Commerce",
+              "teams": [
+                {
+                  "name": "frontend",
+                  "members": 5,
+                  "tech": ["React", "TypeScript"]
+                },
+                {
+                  "name": "backend",
+                  "members": 3,
+                  "tech": ["Node.js", "PostgreSQL"]
+                }
+              ],
+              "deployment": {
+                "prod": {
+                  "url": "https://shop.example.com",
+                  "regions": ["us-east-1", "eu-west-1"]
+                },
+                "staging": {
+                  "url": "https://staging.shop.example.com",
+                  "regions": ["us-east-1"]
+                }
+              }
+            }
+        run: |
+          echo "## Dados do projeto"
+          echo "$PROJECT_DATA" | jq .
+          
+          echo "Tecnologias frontend: $(echo "$PROJECT_DATA" | jq -r '.teams[0].tech | join(", ")')"
+          echo "Regiões de produção: $(echo "$PROJECT_DATA" | jq -r '.deployment.prod.regions | join(", ")')"
+
+  ## 4. MULTI-LINE STRINGS
+  multi-line:
+    name: Strings Multi-linha
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exemplo com pipe (|)
+        env:
+          MARKDOWN_CONTENT: |
+            # Título Principal
+            
+            Este é um conteúdo **Markdown** que preserva:
+            - Quebras de linha
+            - Indentação
+            - Formatação
+            
+            ```python
+            def hello():
+                print("Olá mundo!")
+            ```
+        run: |
+          echo "## Conteúdo Markdown (preserva formatação)"
+          echo "$MARKDOWN_CONTENT"
+
+      - name: Exemplo com maior que (>)
+        env:
+          SQL_QUERY: >
+            SELECT users.id, users.name, orders.total
+            FROM users JOIN orders
+            ON users.id = orders.user_id
+            WHERE orders.date > '2023-01-01'
+            ORDER BY orders.total DESC;
+        run: |
+          echo "## Query SQL (uma linha)"
+          echo "$SQL_QUERY"
