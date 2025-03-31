@@ -24,7 +24,8 @@ env:
 jobs:
   inicio:
     # The type of runner that the job will run on
-    runs-on: [ self-hosted, Linux ] 
+    #runs-on: [ self-hosted, Linux ] 
+    runs-on: ubuntu-24.04
     env:
       valorstring: "Horacio JOBS - Inicio - ${{ inputs.cor}}"
     # Steps represent a sequence of tasks that will be executed as part of the job
