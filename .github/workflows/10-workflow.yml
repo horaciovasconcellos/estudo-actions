@@ -6,8 +6,8 @@ name: 10-workflow
 on:
  workflow_dispatch:  
 env:
-  string: "Hello, World!"
-  integer: 42
+  valorstring: "Horacio Vasconcellos"
+  valorinteiro: 42
   float: 3.14
   boolean: true
 jobs:
@@ -20,10 +20,10 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo "Hello, world! = $string"
+        run: echo "Hello, world! = ${valorstring} "
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
+          echo "Valor do Inteiro : $valorinteiro"
           echo test, and deploy your project.
