@@ -1,0 +1,152 @@
+name: 15-dev_hml_prd_needs
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente específico (opcional)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - DEVELOPER
+        - HOMOLOGACAO
+        - PRODUCAO
+
+jobs:
+  deploy_developer:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        include:
+          - environment: DEVELOPER
+            secret_prefix: 'DEV_'
+    fail-fast: false
+    steps:
+      - name: Validar ambiente
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" != "all" && \
+                "${{ github.event.inputs.environment }}" != "${{ matrix.environment }}" ]]; then
+            echo "Ambiente não corresponde ao input. Pulando..."
+            exit 0
+          fi
+
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar variáveis do ambiente ${{ matrix.environment }}
+        env:
+          COMMON_DB_URL: ${{ secrets.COMMON_DB_URL }}
+          ENV_DB_URL: ${{ secrets[format('{0}DB_URL', matrix.secret_prefix)] }}
+          ENV_API_KEY: ${{ secrets[format('{0}API_KEY', matrix.secret_prefix)] }}
+          ENV_SECRET: ${{ secrets[format('{0}SECRET', matrix.secret_prefix)] }}
+        run: |
+          echo "ENVIRONMENT=${{ matrix.environment }}" >> $GITHUB_ENV
+          echo "DB_URL=$ENV_DB_URL" >> $GITHUB_ENV
+          echo "API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
+          echo "COMMON_DB_URL=$COMMON_DB_URL" >> $GITHUB_ENV
+          echo "::add-mask::$ENV_API_KEY"
+          echo "::add-mask::$ENV_SECRET"
+
+      - name: Verificar variáveis (debug seguro)
+        run: |
+          echo "Ambiente: $ENVIRONMENT"
+          echo "DB_URL configurada"
+          echo "API_KEY disponível (valor oculto por segurança)"
+          echo "Common DB: $COMMON_DB_URL"
+
+      - name: Executar deploy no ambiente ${{ matrix.environment }}
+        run: |
+          echo "Iniciando deploy no ambiente $ENVIRONMENT"
+  
+  deploy_homologacao:
+    needs: deploy_developer
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        include:
+          - environment: HOMOLOGACAO
+            secret_prefix: 'STAGING_'
+    fail-fast: false
+    steps:
+      - name: Validar ambiente
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" != "all" && \
+                "${{ github.event.inputs.environment }}" != "${{ matrix.environment }}" ]]; then
+            echo "Ambiente não corresponde ao input. Pulando..."
+            exit 0
+          fi
+
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar variáveis do ambiente ${{ matrix.environment }}
+        env:
+          COMMON_DB_URL: ${{ secrets.COMMON_DB_URL }}
+          ENV_DB_URL: ${{ secrets[format('{0}DB_URL', matrix.secret_prefix)] }}
+          ENV_API_KEY: ${{ secrets[format('{0}API_KEY', matrix.secret_prefix)] }}
+          ENV_SECRET: ${{ secrets[format('{0}SECRET', matrix.secret_prefix)] }}
+        run: |
+          echo "ENVIRONMENT=${{ matrix.environment }}" >> $GITHUB_ENV
+          echo "DB_URL=$ENV_DB_URL" >> $GITHUB_ENV
+          echo "API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
+          echo "COMMON_DB_URL=$COMMON_DB_URL" >> $GITHUB_ENV
+          echo "::add-mask::$ENV_API_KEY"
+          echo "::add-mask::$ENV_SECRET"
+
+      - name: Verificar variáveis (debug seguro)
+        run: |
+          echo "Ambiente: $ENVIRONMENT"
+          echo "DB_URL configurada"
+          echo "API_KEY disponível (valor oculto por segurança)"
+          echo "Common DB: $COMMON_DB_URL"
+
+      - name: Executar deploy no ambiente ${{ matrix.environment }}
+        run: |
+          echo "Iniciando deploy no ambiente $ENVIRONMENT"
+
+  deploy_producao:
+    needs: deploy_homologacao
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        include:
+          - environment: PRODUCAO
+            secret_prefix: 'PROD_'
+    fail-fast: false
+    steps:
+      - name: Validar ambiente
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" != "all" && \
+                "${{ github.event.inputs.environment }}" != "${{ matrix.environment }}" ]]; then
+            echo "Ambiente não corresponde ao input. Pulando..."
+            exit 0
+          fi
+
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar variáveis do ambiente ${{ matrix.environment }}
+        env:
+          COMMON_DB_URL: ${{ secrets.COMMON_DB_URL }}
+          ENV_DB_URL: ${{ secrets[format('{0}DB_URL', matrix.secret_prefix)] }}
+          ENV_API_KEY: ${{ secrets[format('{0}API_KEY', matrix.secret_prefix)] }}
+          ENV_SECRET: ${{ secrets[format('{0}SECRET', matrix.secret_prefix)] }}
+        run: |
+          echo "ENVIRONMENT=${{ matrix.environment }}" >> $GITHUB_ENV
+          echo "DB_URL=$ENV_DB_URL" >> $GITHUB_ENV
+          echo "API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
+          echo "COMMON_DB_URL=$COMMON_DB_URL" >> $GITHUB_ENV
+          echo "::add-mask::$ENV_API_KEY"
+          echo "::add-mask::$ENV_SECRET"
+
+      - name: Verificar variáveis (debug seguro)
+        run: |
+          echo "Ambiente: $ENVIRONMENT"
+          echo "DB_URL configurada"
+          echo "API_KEY disponível (valor oculto por segurança)"
+          echo "Common DB: $COMMON_DB_URL"
+
+      - name: Executar deploy no ambiente ${{ matrix.environment }}
+        run: |
+          echo "Iniciando deploy no ambiente $ENVIRONMENT"
