@@ -1,4 +1,4 @@
-name: Exemplos Avançados de YAML
+name: 12-estruturas_complexas
 
 on:
   workflow_dispatch:
