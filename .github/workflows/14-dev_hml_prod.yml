@@ -26,20 +26,26 @@ jobs:
             secret_prefix: 'STAGING_'
           - environment: PRODUCAO
             secret_prefix: 'PROD_'
-        exclude: ${{ fromJson(needs.setup.outputs.excluded_environments) }}
     
     if: ${{ github.event.inputs.environment == 'all' || github.event.inputs.environment == matrix.environment }}
     
     steps:
+      - name: Validar input do ambiente
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" != "all" && \
+                "${{ github.event.inputs.environment }}" != "DEVELOPER" && \
+                "${{ github.event.inputs.environment }}" != "HOMOLOGACAO" && \
+                "${{ github.event.inputs.environment }}" != "PRODUCAO" ]]; then
+            echo "Ambiente inválido: ${{ github.event.inputs.environment }}"
+            exit 1
+          fi
+
       - name: Checkout do código
         uses: actions/checkout@v4
 
       - name: Configurar variáveis do ambiente ${{ matrix.environment }}
         env:
-          # Secrets genéricos (disponíveis em todos os ambientes)
           COMMON_DB_URL: ${{ secrets.COMMON_DB_URL }}
-          
-          # Secrets específicos do ambiente
           ENV_DB_URL: ${{ secrets[format('{0}DB_URL', matrix.secret_prefix)] }}
           ENV_API_KEY: ${{ secrets[format('{0}API_KEY', matrix.secret_prefix)] }}
           ENV_SECRET: ${{ secrets[format('{0}SECRET', matrix.secret_prefix)] }}
@@ -48,8 +54,6 @@ jobs:
           echo "DB_URL=$ENV_DB_URL" >> $GITHUB_ENV
           echo "API_KEY=$ENV_API_KEY" >> $GITHUB_ENV
           echo "COMMON_DB_URL=$COMMON_DB_URL" >> $GITHUB_ENV
-          
-          # Máscara os valores sensíveis nos logs
           echo "::add-mask::$ENV_API_KEY"
           echo "::add-mask::$ENV_SECRET"
 
@@ -62,9 +66,15 @@ jobs:
 
       - name: Executar deploy no ambiente ${{ matrix.environment }}
         run: |
-          echo "Iniciando deploy no ambiente $ENVIRONMENT"
-          # Exemplo usando as variáveis
-          #./deploy.sh \
-          #  --env $ENVIRONMENT \
-          #  --db-url "$DB_URL" \
-          #  --api-key "$API_KEY"
+          ./deploy.sh \
+            --env "$ENVIRONMENT" \
+            --db-url "$DB_URL" \
+            --api-key "$API_KEY"
+
+      - name: Enviar notificação de sucesso
+        if: ${{ success() }}
+        run: echo "Deploy no ambiente ${{ matrix.environment }} concluído com sucesso."
+
+      - name: Enviar notificação de falha
+        if: ${{ failure() }}
+        run: echo "Deploy no ambiente ${{ matrix.environment }} falhou."
