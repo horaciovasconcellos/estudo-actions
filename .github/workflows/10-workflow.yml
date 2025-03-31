@@ -8,8 +8,12 @@ on:
   inputs:
       colors:
         description: 'Lista de cores separadas por vírgula'
+        options:
+           - Azul
+           - Verde
+           - Amarelo
         required: true
-        default: 'red,green,blue'
+        default: Verde
 env:
   valorstring: "Horacio Vasconcellos"
   valorinteiro: 42
