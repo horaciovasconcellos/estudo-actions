@@ -1,4 +1,4 @@
-name: 16-Print_email_user_environment
+name: 16-print_email_user_environment
 on:
   workflow_call:
     inputs:
