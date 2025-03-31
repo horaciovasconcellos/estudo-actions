@@ -1,4 +1,4 @@
-name: 15-dev_hml_prd_needs
+name: 14-dev_hml_prod.yml
 on:
   workflow_dispatch:
     inputs:
@@ -21,7 +21,6 @@ jobs:
         include:
           - environment: DEVELOPER
             secret_prefix: 'DEV_'
-    fail-fast: false
     steps:
       - name: Validar ambiente
         run: |
@@ -67,7 +66,6 @@ jobs:
         include:
           - environment: HOMOLOGACAO
             secret_prefix: 'STAGING_'
-    fail-fast: false
     steps:
       - name: Validar ambiente
         run: |
@@ -113,7 +111,6 @@ jobs:
         include:
           - environment: PRODUCAO
             secret_prefix: 'PROD_'
-    fail-fast: false
     steps:
       - name: Validar ambiente
         run: |
