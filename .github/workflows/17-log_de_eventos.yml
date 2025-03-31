@@ -1,5 +1,3 @@
-# This is a basic workflow that is manually triggered
-
 name: 17-log_de_eventos
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
@@ -12,4 +10,5 @@ jobs:
    steps:
      - name: Log event name
        run: echo "Esta etapa só é executada para eventos pull_request."
-       if: ${{ github.event_name == 'pull_request' }}
+       if: ${{ github.event_name == 'workflow_dispatch' }} # Condição no nível do job
+    
