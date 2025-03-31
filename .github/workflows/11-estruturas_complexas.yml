@@ -1,4 +1,9 @@
 name: 11-estruturas_complexas
+
+env: &shared-env
+  NODE_VERSION: 18.x
+  PYTHON_VERSION: 3.10
+  
 on:
   workflow_dispatch:
     inputs:
@@ -22,3 +27,22 @@ jobs:
           for cmd in "${commands[@]}"; do
             eval "$cmd"
           done
+  mapping-example:
+    runs-on: ubuntu-latest
+    env:
+      *shared-env
+    steps:
+      - name: Exemplo de mapping
+        env:
+          USER_DATA: ${{ inputs.user-data }}
+          TEAM_MEMBERS: >
+            [
+              {"name": "Alice", "role": "dev"},
+              {"name": "Bob", "role": "qa"}
+            ]
+        run: |
+          echo "## Exemplo de Mapping"
+          echo "Versão do Node: $NODE_VERSION"
+          echo "Versão do Python: $PYTHON_VERSION"
+          echo "Dados do usuário: $USER_DATA"
+          echo "Membros do time: $TEAM_MEMBERS"
