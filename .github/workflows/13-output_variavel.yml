@@ -1,0 +1,21 @@
+
+name: 13-output_variavel.yml
+on:
+  workflow_dispatch:
+jobs:
+  build_random:
+    name: build_random
+    runs-on: self-hosted
+    env:
+      API_BASE_URL: "https://api.example.com"
+    steps:
+    - name: Imprime variavel
+      run: echo "Nome da variacel $API_BASE_URL"
+
+    - name: Generate a random number
+      id: random_number
+      run: echo "numero=$(shuf -i 1-100 -n 1)" >> "$GITHUB_OUTPUT"
+    - name: Print the random number
+      run: |
+            echo "The random number is ${{ steps.random_number.outputs.numero }}"
+            echo "Parte: ${API_BASE_URL}"
