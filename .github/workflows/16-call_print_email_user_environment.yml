@@ -1,0 +1,22 @@
+name: 16-call_print_email_user_environment
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente específico (DEVELOPER, HOMOLOGACAO, PRODUCAO)'
+        required: true
+        type: string
+        default: 'DEVELOPER'
+
+jobs:
+  call-print-email-user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chamar workflow reutilizável
+        uses: ./.github/workflows/16-print_email_user_environment.yml
+        with:
+          environment: ${{ inputs.environment }}
+
+      - name: Imprimir variável secrets.EMAIL_USER
+        run: |
+          echo "O valor de secrets.EMAIL_USER é: ${{ secrets.EMAIL_USER }}"
