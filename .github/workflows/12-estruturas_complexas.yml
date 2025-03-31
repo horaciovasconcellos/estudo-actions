@@ -12,7 +12,7 @@ jobs:
   ## 1. SEQUÊNCIAS (listas)
   sequencias:
     name: Exemplo de Sequências
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Lista simples
         run: |
@@ -29,10 +29,7 @@ jobs:
 
       - name: Lista de objetos
         env:
-          SERVICES: '[
-            {"name": "api", "port": 8080},
-            {"name": "db", "port": 5432}
-          ]'
+          SERVICES: 100
         run: |
           echo "## Serviços configurados"
           echo "$SERVICES" | jq -c '.[]' | while read service; do
@@ -41,35 +38,11 @@ jobs:
             echo "Serviço $name roda na porta $port"
           done
 
-  ## 2. MAPPINGS (dicionários)
-  mappings:
-    name: Exemplo de Mappings
-    runs-on: ubuntu-latest
-    env:
-      APP_CONFIG: &app-config  # Anchor para reutilização
-        database:
-          host: "db.production"
-          port: 5432
-          credentials:
-            user: "admin"
-            password: ${{ secrets.DB_PASSWORD }}
-        cache:
-          enabled: true
-          ttl: 3600
-
-    steps:
-      - name: Acessar mapping
-        env:
-          CONFIG: *app-config  # Alias para o anchor
-        run: |
-          echo "## Configuração do aplicativo"
-          echo "Host do banco: $(echo "$CONFIG" | jq -r '.database.host')"
-          echo "TTL do cache: $(echo "$CONFIG" | jq -r '.cache.ttl')"
 
   ## 3. ESTRUTURAS DE DADOS COMPLEXAS
   estruturas-complexas:
     name: Estruturas Complexas
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Processar estrutura complexa
         env:
@@ -109,7 +82,7 @@ jobs:
   ## 4. MULTI-LINE STRINGS
   multi-line:
     name: Strings Multi-linha
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Exemplo com pipe (|)
         env:
