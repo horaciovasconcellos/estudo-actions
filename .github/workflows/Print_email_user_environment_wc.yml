@@ -1,0 +1,31 @@
+name: 16-Print_email_user_environment
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Ambiente específico (DEVELOPER, HOMOLOGACAO, PRODUCAO)'
+        required: true
+        type: string
+        default: 'DEVELOPER'
+        options:
+          - DEVELOPER
+          - HOMOLOGACAO
+          - PRODUCAO
+
+jobs:
+  print_email_user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configurar variáveis de ambiente
+        run: |
+          if [ "${{ github.event.inputs.environment }}" == "DEVELOPER" ]; then
+            echo "EMAIL_USER=dev@example.com" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.environment }}" == "HOMOLOGACAO" ]; then
+            echo "EMAIL_USER=staging@example.com" >> $GITHUB_ENV
+          elif [ "${{ github.event.inputs.environment }}" == "PRODUCAO" ]; then
+            echo "EMAIL_USER=prod@example.com" >> $GITHUB_ENV
+          fi
+
+      - name: Imprimir valor da variável EMAIL_USER
+        run: |
+          echo "O EMAIL_USER para o ambiente ${{ github.event.inputs.environment }} é: $EMAIL_USER"
