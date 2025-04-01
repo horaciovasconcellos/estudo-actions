@@ -46,3 +46,16 @@ jobs:
   
       - name: Show notice
         run: echo "::notice::Esta é uma mensagem informativa"
+
+      - name: Outras mensagens
+        run: |
+              echo "::notice::Mensagem informativa"     # Azul (padrão para informações)
+              echo "::warning::Mensagem de alerta"      # Amarelo (avisos)
+              echo "::error::Mensagem de erro"          # Vermelho (erros críticos)
+              echo "::debug::Mensagem de debug"         # Somente visível com ativação de debug
+              echo "::group::Título da seção"           # Inicia grupo recolhível
+              echo "::endgroup::"                       # Fecha grupo
+              echo "::add-mask::valor_secreto"          # Mascara valores sensíveis nos logs
+              echo "::warning file=app.js,line=10,col=15::Erro de sintaxe"  # Com localização
+              echo "::notice title=Título Customizado::Mensagem"            # Com título
+
