@@ -25,7 +25,7 @@ jobs:
         id: input_step
         run: |
           # Solicita o input através de uma variável definida pelo usuário na execução do workflow
-          echo "Input fornecido: ${{ github.event.inputs.user_input }}"
+          echo "Input fornecido: ${{ github.event.inputs.environment }}"
           # echo "::set-output name=processed_input::${{ github.event.inputs.user_input }}"
           echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
 
@@ -34,5 +34,5 @@ jobs:
       - name: Usar o Output da Etapa 1
         run: |
           # Usa o valor de output da etapa anterior
-          echo "O output processado da etapa 1 é: ${{ steps.input_step.outputs.processed_input }}"
+          echo "O output processado da etapa 1 é: ${{ steps.input_step.outputs.name }}""
 
