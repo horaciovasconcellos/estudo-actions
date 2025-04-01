@@ -1,0 +1,17 @@
+# This is a basic workflow that is manually triggered
+
+name: 21-expressoes-impressao-steps
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+jobs:
+  build:
+   runs-on: [ self-hosted, Linux ]
+   steps:
+     - name: Log event name
+       run: |
+             echo "Você esta no repositorio horaciovasconcellos/estudo-actions"
+             echo "Exemplo: ${{ github.repository }}"
+       if: ${{ github.repository  == 'horaciovasconcellos/estudo-actions' }}
