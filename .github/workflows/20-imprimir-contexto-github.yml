@@ -1,0 +1,21 @@
+name: 20-imprimir-contexto-github
+
+on:
+  workflow_dispatch:  # Permite disparar o workflow manualmente
+
+jobs:
+  print_github_context:
+    runs-on: [ self-hposted, Linux]
+
+    steps:
+      - name: Imprimir informações do contexto GitHub
+        run: |
+          # Imprimindo o contexto github completo
+          echo "Repositório: ${{ github.repository }}"
+          echo "Evento: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "SHA do Commit: ${{ github.sha }}"
+          echo "Ator do Commit: ${{ github.actor }}"
+          echo "Padrão de caminho: ${{ github.event.pull_request.head.ref }}"
+          echo "Número da PR: ${{ github.event.pull_request.number }}"
+          echo "Tipo de workflow: ${{ github.workflow }}"
