@@ -34,5 +34,5 @@ jobs:
       - name: Usar o Output da Etapa 1
         run: |
           # Usa o valor de output da etapa anterior
-          echo "O output processado da etapa 1 é: ${{ steps.input_step.outputs.name }}""
+          echo "O output processado da etapa 1 é: ${{ steps.input_step.outputs.name }}"
 
