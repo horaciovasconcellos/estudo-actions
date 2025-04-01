@@ -1,0 +1,26 @@
+# This is a basic workflow that is manually triggered
+
+name: 18-input-output-variaveis
+
+on:
+  workflow_dispatch:  # Permite a execução manual do workflow e a entrada de parâmetros
+
+jobs:
+  input_output_job:
+    runs-on: [ self-hosted, linux ]
+    steps:
+    
+      # Etapa 1: Recebe o input
+      - name: Solicitar Input do Usuário
+        id: input_step
+        run: |
+          # Solicita o input através de uma variável definida pelo usuário na execução do workflow
+          echo "Input fornecido: ${{ github.event.inputs.user_input }}"
+          echo "::set-output name=processed_input::${{ github.event.inputs.user_input }}"
+
+      # Etapa 2: Usar o Output da Etapa 1
+      - name: Usar o Output da Etapa 1
+        run: |
+          # Usa o valor de output da etapa anterior
+          echo "O output processado da etapa 1 é: ${{ steps.input_step.outputs.processed_input }}"
+
