@@ -54,6 +54,7 @@ jobs:
               echo "::error::Mensagem de erro"          # Vermelho (erros críticos)
               echo "::debug::Mensagem de debug"         # Somente visível com ativação de debug
               echo "::group::Título da seção"           # Inicia grupo recolhível
+              echo " Teste da Seção"
               echo "::endgroup::"                       # Fecha grupo
               echo "::add-mask::valor_secreto"          # Mascara valores sensíveis nos logs
               echo "::warning file=app.js,line=10,col=15::Erro de sintaxe"  # Com localização
