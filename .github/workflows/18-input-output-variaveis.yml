@@ -4,7 +4,17 @@ name: 18-input-output-variaveis
 
 on:
   workflow_dispatch:  # Permite a execução manual do workflow e a entrada de parâmetros
-
+    inputs:
+      environment:
+        description: 'Ambiente específico (opcional)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - DEVELOPER
+        - HOMOLOGACAO
+        - PRODUCAO
 jobs:
   input_output_job:
     runs-on: [ self-hosted, linux ]
@@ -17,7 +27,7 @@ jobs:
           # Solicita o input através de uma variável definida pelo usuário na execução do workflow
           echo "Input fornecido: ${{ github.event.inputs.user_input }}"
           # echo "::set-output name=processed_input::${{ github.event.inputs.user_input }}"
-          echo "name=${{ github.event.inputs.user_input }}" >> $GITHUB_OUTPUT
+          echo "name=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
 
 
       # Etapa 2: Usar o Output da Etapa 1
