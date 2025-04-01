@@ -5,7 +5,7 @@ on:
 
 jobs:
   print_github_context:
-    runs-on: [ self-hposted, Linux]
+    runs-on: [ self-hosted, Linux]
 
     steps:
       - name: Imprimir informações do contexto GitHub
