@@ -1,0 +1,157 @@
+name: 24-SDLC_pipeline_microsoft_model
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # Fase 1: Requisitos e Análise
+  requirements_analysis:
+    name: "1. Requisitos e Análise"
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        run: echo "Step: Checkout code - Baixando o código-fonte"
+
+      - name: Analyze requirements
+        run: |
+          echo "Step: Analyze requirements - Analisando requisitos do sistema"
+          echo "Simulando análise de requisitos..."
+          sleep 2
+
+      - name: Generate documentation
+        run: |
+          echo "Step: Generate documentation - Gerando documentação inicial"
+          echo "Documentação técnica criada" > docs.txt
+
+    outputs:
+      requirements_approved: ${{ steps.analyze_requirements.outputs.approved }}
+
+  # Fase 2: Design do Sistema
+  system_design:
+    name: "2. Design do Sistema"
+    needs: requirements_analysis
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        run: echo "Step: Checkout code - Baixando o código-fonte"
+
+      - name: Architectural design
+        run: |
+          echo "Step: Architectural design - Criando arquitetura do sistema"
+          echo "Diagrama de arquitetura gerado" > architecture.txt
+
+      - name: Database design
+        run: |
+          echo "Step: Database design - Projetando modelo de banco de dados"
+          echo "Modelo ERD criado" > database-design.txt
+
+  # Fase 3: Implementação (Coding)
+  implementation:
+    name: "3. Implementação"
+    needs: system_design
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        run: echo "Step: Checkout code - Baixando o código-fonte"
+
+      - name: Install dependencies
+        run: |
+          echo "Step: Install dependencies - Instalando dependências"
+          echo "npm install (simulado)" && sleep 1
+
+      - name: Build application
+        run: |
+          echo "Step: Build application - Compilando aplicação"
+          echo "Build concluído" > build.log
+
+      - name: Run unit tests
+        run: |
+          echo "Step: Run unit tests - Executando testes unitários"
+          echo "Todos os 42 testes passaram!" > test-results.txt
+
+  # Fase 4: Testes
+  testing:
+    name: "4. Testes"
+    needs: implementation
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        run: echo "Step: Checkout code - Baixando o código-fonte"
+
+      - name: Integration tests
+        run: |
+          echo "Step: Integration tests - Testes de integração"
+          echo "Testes de integração concluídos" > integration-tests.log
+
+      - name: System tests
+        run: |
+          echo "Step: System tests - Testes de sistema"
+          echo "Sistema validado" > system-tests.log
+
+      - name: Performance tests
+        run: |
+          echo "Step: Performance tests - Testes de performance"
+          echo "Performance: 98.7% de uptime" > performance-tests.log
+
+  # Fase 5: Deploy
+  deployment:
+    name: "5. Deployment"
+    needs: testing
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        run: echo "Step: Checkout code - Baixando o código-fonte"
+
+      - name: Prepare deployment
+        run: |
+          echo "Step: Prepare deployment - Preparando pacote de deploy"
+          echo "Pacote .zip criado" > deployment-package.zip
+
+      - name: Deploy to staging
+        run: |
+          echo "Step: Deploy to staging - Implantando em ambiente de staging"
+          echo "Deploy para staging concluído" > staging-deploy.log
+
+      - name: Approve production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Step: Approve production - Aprovação para produção"
+          echo "Aguardando aprovação manual..." && sleep 5
+          echo "Aprovado!"
+
+      - name: Deploy to production
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Step: Deploy to production - Implantando em produção"
+          echo "Deploy para produção concluído" > production-deploy.log
+
+  # Fase 6: Manutenção
+  maintenance:
+    name: "6. Manutenção"
+    needs: deployment
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        run: echo "Step: Checkout code - Baixando o código-fonte"
+
+      - name: Monitor application
+        run: |
+          echo "Step: Monitor application - Monitorando aplicação"
+          echo "Coletando métricas..." && sleep 3
+          echo "Tudo operacional!"
+
+      - name: Generate report
+        run: |
+          echo "Step: Generate report - Gerando relatório final"
+          echo "Relatório do ciclo SDLC:" > sdlc-report.md
+          echo "- Requisitos analisados" >> sdlc-report.md
+          echo "- Sistema projetado" >> sdlc-report.md
+          echo "- Código implementado" >> sdlc-report.md
+          echo "- Testes concluídos" >> sdlc-report.md
+          echo "- Deploy realizado" >> sdlc-report.md
