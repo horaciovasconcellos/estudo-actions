@@ -11,17 +11,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        run: echo "Step: Checkout code - Baixando o código-fonte"
+
+      - name: Impressao Sep
+        run: |
+              echo "Passo: Checkout code - Baixando o código-fonte"
 
       - name: Analyze requirements
         run: |
-          echo "Step: Analyze requirements - Analisando requisitos do sistema"
+          echo "Passo: Analyze requirements - Analisando requisitos do sistema"
           echo "Simulando análise de requisitos..."
           sleep 2
 
       - name: Generate documentation
         run: |
-          echo "Step: Generate documentation - Gerando documentação inicial"
+          echo "Passo: Generate documentation - Gerando documentação inicial"
           echo "Documentação técnica criada" > docs.txt
 
     outputs:
@@ -35,7 +38,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        run: echo "Step: Checkout code - Baixando o código-fonte"
+      - name: Impressao
+        run: echo "Passo: Checkout code - Baixando o código-fonte"
 
       - name: Architectural design
         run: |
@@ -55,6 +59,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Impressao
         run: echo "Step: Checkout code - Baixando o código-fonte"
 
       - name: Install dependencies
@@ -80,6 +85,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Impressao
         run: echo "Step: Checkout code - Baixando o código-fonte"
 
       - name: Integration tests
@@ -105,6 +111,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Impressao
         run: echo "Step: Checkout code - Baixando o código-fonte"
 
       - name: Prepare deployment
@@ -138,7 +145,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        run: echo "Step: Checkout code - Baixando o código-fonte"
+      - name: Impressao
+        run: echo "Passo: Checkout code - Baixando o código-fonte"
 
       - name: Monitor application
         run: |
