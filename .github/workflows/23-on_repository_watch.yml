@@ -1,0 +1,42 @@
+name: 23-on_repository_watch
+
+on:
+  watch:
+    types: [started]  # Dispara quando alguém começa a observar o repositório
+
+jobs:
+  thank-watcher:
+    runs-on: [ self-hosted, Linux ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get watcher info
+        id: watcher-info
+        run: |
+          echo "Watcher: ${{ github.actor }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Timestamp: ${{ github.event.repository.updated_at }}"
+          
+          # Armazenar informações para uso posterior
+          echo "WATCHER_LOGIN=${{ github.actor }}" >> $GITHUB_ENV
+          echo "REPO_NAME=${{ github.repository }}" >> $GITHUB_ENV
+
+      - name: Send thank you message (simulado)
+        run: |
+          echo "🤖 Obrigado por observar o repositório, @${{ env.WATCHER_LOGIN }}!"
+          echo "📌 Agora você receberá notificações sobre atividades em ${{ env.REPO_NAME }}"
+          echo "⭐ Se você gostou do projeto, considere dar uma estrela também!"
+
+      - name: Create GitHub Issue (opcional)
+        if: github.event.repository.stargazers_count > 100  # Só cria issue para repositórios populares
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Novo observador: @${{ github.actor }}`,
+              body: `O usuário @${{ github.actor }} começou a observar este repositório! Total de observadores agora: ${{ github.event.repository.subscribers_count }}`
+            })
