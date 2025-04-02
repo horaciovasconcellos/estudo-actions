@@ -1,0 +1,21 @@
+name: 22-webhook_triggered_action
+
+on:
+  repository_dispatch:
+    types: [webhook-event] # Você pode definir tipos personalizados
+
+jobs:
+  process-webhook:
+    runs-on: [ self-hosted , Linux ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Display payload
+        run: |
+          echo "Event payload: ${{ toJSON(github.event.client_payload) }}"
+          # Processe os dados do webhook aqui
+          
+      - name: Execute custom logic
+        run: |
+          echo "Webhook received with data: ${{ github.event.client_payload.data }}"
