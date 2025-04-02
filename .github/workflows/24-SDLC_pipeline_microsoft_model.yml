@@ -38,8 +38,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
       - name: Impressao
-        run: echo "Passo: Checkout code - Baixando o código-fonte"
+        run: |
+               echo "Passo: Checkout code - Baixando o código-fonte"
 
       - name: Architectural design
         run: |
@@ -59,8 +61,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
       - name: Impressao
-        run: echo "Step: Checkout code - Baixando o código-fonte"
+        run: |
+               echo "Step: Checkout code - Baixando o código-fonte"
 
       - name: Install dependencies
         run: |
@@ -85,8 +89,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
       - name: Impressao
-        run: echo "Step: Checkout code - Baixando o código-fonte"
+        run: |
+               echo "Step: Checkout code - Baixando o código-fonte"
 
       - name: Integration tests
         run: |
@@ -112,7 +118,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Impressao
-        run: echo "Step: Checkout code - Baixando o código-fonte"
+        run: |
+               echo "Step: Checkout code - Baixando o código-fonte"
 
       - name: Prepare deployment
         run: |
@@ -145,8 +152,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
       - name: Impressao
-        run: echo "Passo: Checkout code - Baixando o código-fonte"
+        run: |
+               echo "Passo: Checkout code - Baixando o código-fonte"
 
       - name: Monitor application
         run: |
