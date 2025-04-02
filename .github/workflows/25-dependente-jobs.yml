@@ -1,0 +1,40 @@
+name: 25-dependente-jobs
+
+on: [push]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: npm run lint
+    outputs:
+      lint_status: ${{ job.status }}
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: npm test
+    outputs:
+      test_coverage: ${{ steps.coverage.outputs.percentage }}
+
+  build:
+    needs: [lint, test]  # Depende de ambos os jobs
+    if: always()  # Executa mesmo se algum job anterior falhar
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: npm run build
+    - run: |
+             echo "Lint status: ${{ needs.lint.outputs.lint_status }}"
+    - run: |
+             echo "Test coverage: ${{ needs.test.outputs.test_coverage }}"
+
+  deploy:
+    needs: build
+    if: needs.build.result == 'success' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - run: npm run deploy
