@@ -9,6 +9,7 @@ on:
 jobs:
   container-job:
     runs-on: ubuntu-latest
+    environment: DESENVOLVIMENTO
     
     # Define o container que será usado para executar o job
     container:
@@ -31,6 +32,6 @@ jobs:
           
       # Usa uma ação containerizada personalizada
       - name: Use custom container action
-        uses: docker://ghcr.io/your-org/your-action:latest
+        uses: docker://ghcr.io/77678117787/action_workflow:latest
         with:
           input-param: 'value'
