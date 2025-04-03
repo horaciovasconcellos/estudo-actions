@@ -1,6 +1,8 @@
 name: 30-container_action_workflow
 
 on:
+  workflow_dispatch:
+  
   push:
     branches: [ main ]
   pull_request:
