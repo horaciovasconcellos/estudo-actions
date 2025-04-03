@@ -1,0 +1,36 @@
+name: 30-container_action_workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    
+    # Define o container que será usado para executar o job
+    container:
+      image: node:16-alpine
+      credentials:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      options: --cpus 1
+
+    steps:
+      # Checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      # Executa um comando dentro do container
+      - name: Run tests
+        run: |
+          npm install
+          npm test
+          
+      # Usa uma ação containerizada personalizada
+      - name: Use custom container action
+        uses: docker://ghcr.io/your-org/your-action:latest
+        with:
+          input-param: 'value'
