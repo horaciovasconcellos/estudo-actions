@@ -1,0 +1,61 @@
+name: 41-working-directory
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        
+      # 1. Criando estrutura de diretórios para o exemplo
+      - name: Criar estrutura de pastas
+        run: |
+          mkdir -p api/ src/ tests/
+          echo "console.log('API module');" > api/index.js
+          echo "console.log('Source code');" > src/main.js
+          echo "console.log('Tests');" > tests/test.js
+          
+      # 2. Executando comandos no diretório raiz
+      - name: Listar arquivos (raiz)
+        run: ls -l
+          
+      # 3. Usando working-directory para a pasta 'api'
+      - name: Trabalhando no diretório api
+        working-directory: ./api
+        run: |
+          echo "Diretório atual: $(pwd)"
+          ls -l
+          node index.js
+          
+      # 4. Usando working-directory para a pasta 'src'
+      - name: Trabalhando no diretório src
+        working-directory: ./src
+        run: |
+          echo "Diretório atual: $(pwd)"
+          ls -l
+          node main.js
+          
+      # 5. Step que falha propositalmente (diretório não existe)
+      - name: Tentativa em diretório inexistente
+        working-directory: ./non-existent-dir
+        run: echo "Este passo falhará"
+        continue-on-error: true
+        
+      # 6. Trabalhando com múltiplos working-directory no mesmo step
+      - name: Build multi-projeto
+        run: |
+          echo "Build do projeto API:"
+          cd api && npm install && npm run build
+          
+          echo "Build do projeto principal:"
+          cd ../src && npm install && npm run build
+          
+      # 7. Usando working-directory com actions customizadas
+      - name: Usando action com working-directory
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+        working-directory: ./api  # Aplica-se apenas aos próximos steps
