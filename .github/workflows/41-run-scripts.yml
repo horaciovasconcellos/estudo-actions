@@ -1,6 +1,7 @@
-name: Executar Scripts de Arquivos
+name: 41-run-scripts
+
 on: 
- workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   execute-scripts:
@@ -11,7 +12,8 @@ jobs:
 
       # 1. Executar script Bash
       - name: Executar script Shell
-        run: bash scripts/bash-script.sh
+        run: | 
+             bash scripts/bash-script.sh
         env:
           CUSTOM_VAR: "Valor do GitHub Actions"
 
@@ -25,17 +27,21 @@ jobs:
       # 3. Executar script Node.js
       - name: Instalar dependências Node
         if: exists('package.json')
-        run: npm install
+        run: |
+              npm install
 
       - name: Executar script Node
-        run: node scripts/node-script.js
+        run: |
+               node scripts/node-script.js
         env:
           NODE_ENV: "production"
 
       # 4. Script com parâmetros
       - name: Executar com argumentos
-        run: bash scripts/bash-script.sh "param1" "param2"
+        run: |
+               bash scripts/bash-script.sh "param1" "param2"
 
       # 5. Dar permissão antes de executar (se necessário)
       - name: Dar permissão de execução
-        run: chmod +x scripts/*.sh
+        run: |
+              chmod +x scripts/*.sh
