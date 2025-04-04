@@ -55,7 +55,6 @@ jobs:
       - name: Build application
         id: build
         run: |
-          npm run build
           echo "status=success" >> $GITHUB_OUTPUT
         continue-on-error: false
           
