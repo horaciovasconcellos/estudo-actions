@@ -1,0 +1,76 @@
+name: 37_variaveis_de_ambiente_contexto
+on: 
+  workflow_dispatch:
+env:
+  VAR_GLOBAL: "Esta variável está disponível em todos os jobs"
+
+jobs:
+  print-env-vars:
+    runs-on: ubuntu-latest
+    env:
+      VAR_JOB: "Variável disponível apenas neste job"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Variáveis padrão do GitHub Actions
+      - name: Print default GitHub env vars
+        run: |
+          echo "::group::Variáveis padrão do GitHub"
+          echo "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo "GITHUB_SHA: $GITHUB_SHA"
+          echo "GITHUB_REF: $GITHUB_REF"
+          echo "GITHUB_WORKFLOW: $GITHUB_WORKFLOW"
+          echo "::endgroup::"
+
+      # Variáveis customizadas
+      - name: Print custom env vars
+        run: |
+          echo "::group::Variáveis customizadas"
+          echo "VAR_GLOBAL: $VAR_GLOBAL"
+          echo "VAR_JOB: $VAR_JOB"
+          echo "VAR_STEP: $VAR_STEP"
+          echo "::endgroup::"
+        env:
+          VAR_STEP: "Variável disponível apenas neste step"
+
+      # Variáveis do sistema
+      - name: Print system env vars
+        run: |
+          echo "::group::Variáveis do sistema"
+          echo "PATH: $PATH"
+          echo "USER: $USER"
+          echo "HOME: $HOME"
+          echo "::endgroup::"
+
+      # Variáveis de contexto
+      - name: Print context vars
+        run: |
+          echo "::group::Variáveis de contexto"
+          echo "Evento: ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Timestamp: ${{ steps.timestamp.outputs.time }}"
+          echo "::endgroup::"
+        id: context-step
+
+      # Criando variáveis dinamicamente
+      - name: Set dynamic variable
+        id: timestamp
+        run: echo "time=$(date)" >> $GITHUB_OUTPUT
+
+      # Variáveis de secrets
+      - name: Print secret example
+        if: env.MY_SECRET
+        run: echo "Secret value is set (but won't print it!)"
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+
+  outro-job:
+    runs-on: ubuntu-latest
+    needs: print-env-vars
+    steps:
+      - name: Show var inheritance
+        run: |
+          echo "VAR_GLOBAL: $VAR_GLOBAL"  # Ainda disponível
+          echo "VAR_JOB: $VAR_JOB"        # Vazio - só existia no job anterior
