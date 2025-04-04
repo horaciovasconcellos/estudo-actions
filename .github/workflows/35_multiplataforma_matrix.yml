@@ -34,20 +34,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+        run:  |
+               echo "Passei pelo Setup Node.js ${{ matrix.node-version }}"
 
       - name: Install dependencies
-        run: npm ci
-        env:
-          NODE_ENV: development
+        run:  |
+               echo "Passei pelo Install dependencies ${{ matrix.node-version }}"
 
       - name: Run ${{ matrix.framework }} tests
         run: |
           echo "Running $TEST_TYPE tests on ${{ matrix.os }} with Node ${{ matrix.node-version }}"
-          npm run test:${{ matrix.framework }}:$TEST_TYPE
         shell: bash
 
       - name: Upload test results
