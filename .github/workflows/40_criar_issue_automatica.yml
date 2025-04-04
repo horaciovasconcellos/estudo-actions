@@ -29,5 +29,4 @@ jobs:
                --data '{
                  "title": "${ISSUE_TITLE}",
                  "body": "Automatically crated by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }} }}_."
-               }' \
-               -- fail
+               }'
