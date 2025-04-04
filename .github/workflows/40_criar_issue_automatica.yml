@@ -22,11 +22,10 @@ jobs:
           ISSUE_TITLE: ${{ inputs.issue-title }}
           ISSUE_BODY: ${{ inputs.issue-body }}
         run: | 
-              curl --request POST \
-               --url https://api.github.com/repos/${{ github.repository }}/issues \
-               --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-               --header 'content-type: application/json' \
-               --data '{
-                 "title": "${ISSUE_TITLE}",
-                 "body": "Automatically crated by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }} }}_."
-               }'
+              curl -L \
+                -X POST \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                https://api.github.com/repos/horaciovasconcellos/estudo-actions/issues \
+                -d '{"title":"Found a bug","body":"I'\''m having a problem with this.","assignees":["octocat"],"milestone":1,"labels":["bug"]}'
