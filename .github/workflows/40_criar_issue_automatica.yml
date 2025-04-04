@@ -11,19 +11,22 @@ on:
         required: false
         default: 'Esta issue foi criada automaticamente por um workflow do GitHub Actions.'
 jobs:
-  create_issue:
-    runs-on: self-hosted
-    permissions:
-      issues: write
+  create-issue-with-curl:
+    runs-on: ubuntu-latest
     steps:
-      - name: Create issue using REST API
+      - name: Criar Issue usando cURL
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          ISSUE_TITLE: ${{ inputs.issue-title }}
+          ISSUE_BODY: ${{ inputs.issue-body }}
         run: |
-          curl --request POST \
-          --url https://api.github.com/repos/${{ github.repository }}/issues \
-          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-          --header 'content-type: application/json' \
-          --data '{
-            "title": "Automated issue for commit: ${{ github.sha }}",
-            "body": "Automatically crated by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }} }}_."
-          }' \
-          -- fail
+          curl -X POST \
+          -H "Authorization: token $GITHUB_TOKEN" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/$REPO_OWNER/estudo-actions/issues \
+          -d '{
+            "title": "'"$ISSUE_TITLE"'",
+            "body": "'"$ISSUE_BODY"'\n\nCriada por: @'"${{ github.actor }}"'\nWorkflow: '"${{ github.workflow }}"'\nExecução: '"${{ github.run_id }}"'",
+            "labels": ["automated"]
+          }'
