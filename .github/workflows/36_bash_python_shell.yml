@@ -1,4 +1,4 @@
-name: 35-bash-python-shell
+name: 36_bash_python_shell
 on:
   workflow_dispatch:
 
