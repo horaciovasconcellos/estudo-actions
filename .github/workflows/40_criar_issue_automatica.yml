@@ -22,7 +22,7 @@ jobs:
             try {
               const response = await github.rest.issues.create({
                 owner: context.repo.owner,
-                repo: 'ESTOU-GITHUB-ACTIONS',
+                repo: 'estudo-actions',
                 title: '${{ inputs.issue-title }}',
                 body: '${{ inputs.issue-body }}\n\n' +
                       `Criada por: @${{ github.actor }}\n` +
