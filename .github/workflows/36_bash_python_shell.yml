@@ -23,6 +23,17 @@ jobs:
           ls -la
           echo "PATH: ${PATH}"
           
-      - name: Run script in custom shell
-        run: echo "Hello, World!"
-        shell: python {0}
+  # 2. Pure Bash step
+      - name: Execute Bash commands
+        run: |
+          echo "Running in Bash shell"
+          echo "Current directory: $(pwd)"
+          echo "System info: $(uname -a)"
+          ls -la
+          echo "PATH: ${PATH}"
+          
+      # 3. Run Python script
+      - name: Run Python script
+        run: |
+          python --version
+          echo "print('Hello, World!')" | python
