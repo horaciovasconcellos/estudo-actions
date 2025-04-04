@@ -27,6 +27,6 @@ jobs:
                   --header 'content-type: application/json' \
                   --data '{
                   "title": "${ISSUE_TITLE}",
-            "body": "${ ISSUE_BODY }\n\n The commit hash was: _${{ github.sha }} }}_."
-          }' \
-          -- fail
+                  "body": "${ ISSUE_BODY }\n\n The commit hash was: _${{ github.sha }} }}_."
+                  }' \
+                 -- fail
