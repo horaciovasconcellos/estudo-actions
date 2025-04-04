@@ -15,25 +15,19 @@ jobs:
   create-issue:
     runs-on: ubuntu-latest
     steps:
-      - name: Criar Issue
-        uses: actions/github-script@v6
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Criar issue
+        uses: actions/github-script@v7
         with:
           script: |
-            try {
-              const response = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: 'estudo-actions',
-                title: '${{ inputs.issue-title }}',
-                body: '${{ inputs.issue-body }}\n\n' +
-                      `Criada por: @${{ github.actor }}\n` +
-                      `Workflow: ${{ github.workflow }}\n` +
-                      `Execução: ${{ github.run_id }}`,
-                labels: ['automated']
-              });
-              console.log(`Issue criada com sucesso: ${response.data.html_url}`);
-            } catch (error) {
-              console.error('Erro ao criar issue:', error);
-              core.setFailed('Falha ao criar issue');
-            }
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Nova Issue Criada Automáticamente',
+              body: 'Esta issue foi criada automaticamente por um workflow do GitHub Actions.'
+            });
+            console.log('Issue criada com sucesso: ' + issue.data.html_url);
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
