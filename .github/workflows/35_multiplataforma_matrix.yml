@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         # Configuração da matriz de testes
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, [ self-hosted, Linux] ]
         node-version: [14, 16, 18]
         framework: ['react', 'angular', 'vue']
         include:
@@ -21,10 +21,6 @@ jobs:
             node-version: 16
             framework: 'angular'
             test-type: 'e2e'
-        exclude:
-          - os: macos-latest
-            node-version: 14
-    
     env:
       CI: true
       TEST_TYPE: ${{ matrix.test-type || 'unit' }}
