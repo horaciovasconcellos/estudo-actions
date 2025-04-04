@@ -1,0 +1,41 @@
+name: Executar Scripts de Arquivos
+on: 
+ workflow_dispatch:
+
+jobs:
+  execute-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 1. Executar script Bash
+      - name: Executar script Shell
+        run: bash scripts/bash-script.sh
+        env:
+          CUSTOM_VAR: "Valor do GitHub Actions"
+
+      # 2. Executar script Python
+      - name: Executar script Python
+        run: |
+          python scripts/python-script.py
+          # Alternativa com versão específica:
+          python3.10 scripts/python-script.py
+
+      # 3. Executar script Node.js
+      - name: Instalar dependências Node
+        if: exists('package.json')
+        run: npm install
+
+      - name: Executar script Node
+        run: node scripts/node-script.js
+        env:
+          NODE_ENV: "production"
+
+      # 4. Script com parâmetros
+      - name: Executar com argumentos
+        run: bash scripts/bash-script.sh "param1" "param2"
+
+      # 5. Dar permissão antes de executar (se necessário)
+      - name: Dar permissão de execução
+        run: chmod +x scripts/*.sh
