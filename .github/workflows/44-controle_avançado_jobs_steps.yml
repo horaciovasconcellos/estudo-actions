@@ -1,0 +1,112 @@
+name: 44-controle_avançado_jobs_steps
+on: 
+  workflow_dispatch:
+env:
+  ENV_GLOBAL: "Disponível em todos os jobs"
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      db_url: ${{ steps.set-db.outputs.db_url }}
+      build_status: ${{ steps.build.outputs.status }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step condicional
+      - name: Configurar Banco de Dados
+        id: set-db
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "Configurando banco de dados..."
+          echo "db_url=postgres://user:pass@db-host/prod" >> $GITHUB_OUTPUT
+
+      # Step com timeout
+      - name: Build
+        id: build
+        timeout-minutes: 5
+        run: |
+          echo "Executando build..."
+          echo "status=success" >> $GITHUB_OUTPUT
+
+      # Step que sempre executa (mesmo se anteriores falharem)
+      - name: Notificar início
+        if: always()
+        run: echo "Iniciando pipeline..."
+
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [14, 16, 18]
+    
+    steps:
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Step com continue-on-error
+      - name: Testes unitários
+        continue-on-error: true
+        run: npm test
+
+      # Step dependente do anterior
+      - name: Upload coverage
+        if: success() || failure()  # Executa mesmo se testes falharem
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ matrix.os }}-node${{ matrix.node-version }}
+          path: coverage/
+
+  deploy:
+    needs: [setup, test]
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency: production-deploy
+    
+    steps:
+      - name: Validar ambiente
+        run: |
+          echo "DB_URL: ${{ needs.setup.outputs.db_url }}"
+          [ "${{ needs.setup.outputs.build_status }}" == "success" ] || exit 1
+
+      # Step com matriz dinâmica
+      - name: Deploy para regiões
+        run: ./deploy.sh ${{ matrix.region }}
+        strategy:
+          matrix:
+            region: ["us-east-1", "us-west-2", "eu-central-1"]
+
+      # Step com retry
+      - name: Verificação pós-deploy
+        timeout-minutes: 3
+        retry-on-error: true
+        max-retries: 2
+        run: ./healthcheck.sh
+
+  notify:
+    needs: deploy
+    if: always()  # Executa mesmo se jobs anteriores falharem
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Notificar sucesso
+        if: success()
+        run: ./notify.sh "Deploy concluído com sucesso!"
+
+      - name: Notificar falha
+        if: failure()
+        run: ./notify.sh "Falha no deploy! Verificar logs: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+      # Step final com resumo
+      - name: Resumo da execução
+        run: |
+          echo "Status dos jobs:"
+          echo "- Setup: ${{ needs.setup.result }}"
+          echo "- Test: ${{ needs.test.result }}"
+          echo "- Deploy: ${{ needs.deploy.result }}"
