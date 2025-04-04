@@ -53,9 +53,3 @@ jobs:
           echo "Build do projeto principal:"
           cd ../src && npm install && npm run build
           
-      # 7. Usando working-directory com actions customizadas
-      - name: Usando action com working-directory
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-        working-directory: ./api  # Aplica-se apenas aos próximos steps
