@@ -55,7 +55,7 @@ jobs:
           
       # 7. Usando working-directory com actions customizadas
       - name: Usando action com working-directory
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
         working-directory: ./api  # Aplica-se apenas aos próximos steps
