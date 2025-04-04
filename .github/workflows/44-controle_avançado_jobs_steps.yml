@@ -101,8 +101,8 @@ jobs:
 
       - name: Notificar falha
         if: failure()
-        run: ./notify.sh "Falha no deploy! Verificar logs: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-
+        run: |
+               echo "::error:: Falha deu ruim"
       # Step final com resumo
       - name: Resumo da execução
         run: |
