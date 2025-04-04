@@ -73,7 +73,7 @@ jobs:
           name: build-output
           path: dist/
         if: success()
-          
+        continue-on-error: true
   deploy:
     name: Deploy para Produção
     needs: build-and-test
