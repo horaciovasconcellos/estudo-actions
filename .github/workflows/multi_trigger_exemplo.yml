@@ -1,0 +1,73 @@
+name: 31-multi_trigger_exemplo
+
+on:
+  # Gatilho manual
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente para deploy'
+        required: true
+        default: 'staging'
+      debug:
+        description: 'Executar em modo debug?'
+        type: boolean
+        default: false
+
+  # Gatilho quando outro workflow é concluído
+  workflow_run:
+    workflows: ["CI Pipeline"]  # Nome do workflow que deve ser concluído
+    branches: [main]
+    types:
+      - completed
+
+  # Gatilho para eventos de check suite
+  check_suite:
+    types:
+      - completed
+
+  # Gatilho para eventos de label
+  label:
+    types:
+      - created
+      - edited
+      - deleted
+
+  # Gatilho para eventos de milestone
+  milestone:
+    types:
+      - created
+      - closed
+
+jobs:
+  process-event:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check event type
+        run: |
+          echo "Evento que disparou o workflow: ${{ github.event_name }}"
+          
+          case "${{ github.event_name }}" in
+            "workflow_dispatch")
+              echo "Execução manual"
+              echo "Ambiente: ${{ github.event.inputs.environment }}"
+              echo "Debug: ${{ github.event.inputs.debug }}"
+              ;;
+            "workflow_run")
+              echo "Workflow CI Pipeline concluído"
+              echo "Status: ${{ github.event.workflow_run.conclusion }}"
+              ;;
+            "check_suite")
+              echo "Check suite concluído"
+              echo "Status: ${{ github.event.check_suite.conclusion }}"
+              ;;
+            "label")
+              echo "Evento de label"
+              echo "Ação: ${{ github.event.action }}"
+              echo "Label: ${{ github.event.label.name }}"
+              ;;
+            "milestone")
+              echo "Evento de milestone"
+              echo "Ação: ${{ github.event.action }}"
+              echo "Milestone: ${{ github.event.milestone.title }}"
+              ;;
+          esac
