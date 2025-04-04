@@ -48,8 +48,8 @@ jobs:
       - name: Build multi-projeto
         run: |
           echo "Build do projeto API:"
-          cd api && npm install && npm run build
+          cd api && npm install 
           
           echo "Build do projeto principal:"
-          cd ../src && npm install && npm run build
+          cd ../src && npm install
           
