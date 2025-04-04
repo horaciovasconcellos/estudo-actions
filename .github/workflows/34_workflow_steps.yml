@@ -1,0 +1,110 @@
+name: 34_workflow_steps
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente para deploy'
+        required: true
+        default: 'staging'
+      debug-mode:
+        description: 'Habilitar modo debug'
+        type: boolean
+        default: false
+
+env:
+  APP_VERSION: '1.0.0'
+  NODE_ENV: 'production'
+
+jobs:
+  build-and-test:
+    name: Construir e Testar
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      
+    outputs:
+      build-status: ${{ steps.build.outputs.status }}
+      test-coverage: ${{ steps.test.outputs.coverage }}
+      
+    steps:
+      # Step 1: Checkout do código
+      - name: Checkout repository
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          submodules: recursive
+          
+      # Step 2: Configurar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      # Step 3: Instalar dependências
+      - name: Install dependencies
+        id: install
+        run: npm ci
+        shell: bash
+        env:
+          NODE_ENV: development
+        timeout-minutes: 5
+          
+      # Step 4: Build do projeto
+      - name: Build application
+        id: build
+        run: |
+          npm run build
+          echo "status=success" >> $GITHUB_OUTPUT
+        continue-on-error: false
+          
+      # Step 5: Executar testes
+      - name: Run tests
+        id: test
+        run: |
+          npm test
+          echo "coverage=$(cat coverage.txt)" >> $GITHUB_OUTPUT
+        if: always() && steps.build.outputs.status == 'success'
+          
+      # Step 6: Upload de artefatos
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+        if: success()
+          
+  deploy:
+    name: Deploy para Produção
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency: 
+      group: production-deploy
+      cancel-in-progress: true
+      
+    steps:
+      # Step 1: Download de artefatos
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          
+      # Step 2: Deploy condicional
+      - name: Deploy to production
+        run: ./deploy.sh ${{ inputs.environment }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        if: |
+          github.ref == 'refs/heads/main' &&
+          needs.build-and-test.outputs.build-status == 'success' &&
+          (github.event_name == 'workflow_dispatch' || github.event_name == 'push')
+          
+      # Step 3: Notificação
+      - name: Send notification
+        uses: actions/slack-notify@v1
+        with:
+          status: ${{ job.status }}
+        if: always()
