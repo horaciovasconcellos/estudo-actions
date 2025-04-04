@@ -87,13 +87,11 @@ jobs:
     steps:
       # Step 1: Download de artefatos
       - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-output
+        run: |
+              echo ":::warning::: Teste "
           
       # Step 3: Notificação
       - name: Send notification
-        uses: actions/slack-notify@v1
-        with:
-          status: ${{ job.status }}
+        run: |
+              echo ":::warning::: Tudo muito bom "
         if: always()
