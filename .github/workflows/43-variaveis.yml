@@ -1,0 +1,18 @@
+name: 43-variaveis
+on:
+  workflow_dispatch:
+env:
+  GLOBAL_VARIABLE: "Global value"
+jobs:
+  build:
+    runs-on: self-hosted
+    env:
+      JOB_VARIABLE: "Job value"
+    steps:
+      - name: Print environment variables
+        run: |
+              echo "Global variable: $GLOBAL_VARIABLE"
+              echo "Job variable: $JOB_VARIABLE"
+              echo "Step variable: $STEP_VARIABLE"
+        env:
+          STEP_VARIABLE: "Step value"
