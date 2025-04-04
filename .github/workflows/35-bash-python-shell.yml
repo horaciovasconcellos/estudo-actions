@@ -23,57 +23,6 @@ jobs:
           ls -la
           echo "PATH: ${PATH}"
           
-      # 3. Python environment setup
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'  # Specify your Python version
-          cache: 'pip'  # Enable dependency caching
-
-      # 4. Pure Python step
-      - name: Execute Python script
-        run: |
-          echo "Running Python commands"
-          python -c "import sys; print(f'Python version: {sys.version}')"
-          python -c "import os; print(f'Current directory: {os.getcwd()}')"
-          python -c "import platform; print(f'System: {platform.platform()}')"
-        shell: bash  # Still using bash to invoke Python
-
-      # 5. Hybrid step (Bash + Python interaction)
-      - name: Bash-Python integration
-        run: |
-          # Create a Python script from bash
-          cat << 'EOF' > script.py
-          def greet(name):
-              return f"Hello, {name} from Python!"
-              
-          if __name__ == "__main__":
-              import sys
-              print(greet(sys.argv[1]))
-          EOF
-          
-          # Execute the script and capture output
-          PYTHON_OUTPUT=$(python script.py "GitHub Actions")
-          echo "Python output: ${PYTHON_OUTPUT}"
-          
-          # Process Python output in Bash
-          UPPER_OUTPUT=$(echo "${PYTHON_OUTPUT}" | tr '[:lower:]' '[:upper:]')
-          echo "Modified output: ${UPPER_OUTPUT}"
-
-      # 6. Python with dependencies
-      - name: Python with package requirements
-        run: |
-          pip install requests  # Example package
-          python -c "import requests; print(f'Requests version: {requests.__version__}')"
-          
-      # 7. Error handling across shells
-      - name: Error handling demo
-        run: |
-          set -e  # Exit immediately on error in Bash
-          
-          # This will fail intentionally
-          if ! python -c "import nonexistent_module"; then
-              echo "Python error caught in Bash"
-              exit 1
-          fi
-        continue-on-error: true  # Allows workflow to continue
+      - name: Run script in custom shell
+        run: echo "Hello, World!"
+        shell: python {0}
