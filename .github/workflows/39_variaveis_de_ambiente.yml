@@ -1,0 +1,19 @@
+# This is a basic workflow that is manually triggered
+
+name: 39_variaveis_de_ambiente
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+jobs:
+  setup-and-use-env:
+    runs-on: self-hosted
+    steps:
+      - name: Set dynamic environment variable
+        run: |
+          echo "DYNAMIC_VAR=Hello from GitHub Actions" > $GITHUB_ENV
+
+      - name: Use the environment variable
+        run: |
+          echo "The value of DYNAMIC_VAR is: $DYNAMIC_VAR"
