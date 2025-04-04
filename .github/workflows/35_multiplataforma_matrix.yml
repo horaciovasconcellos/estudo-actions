@@ -1,0 +1,71 @@
+name: 35_multiplataforma_matrix
+on:
+  workflow_dispatch:
+
+jobs:
+  test-matrix:
+    name: Testes em Multiplataformas
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # Configuração da matriz de testes
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [14, 16, 18]
+        framework: ['react', 'angular', 'vue']
+        include:
+          - os: ubuntu-latest
+            node-version: 18
+            framework: 'react'
+            test-type: 'integration'
+          - os: windows-latest
+            node-version: 16
+            framework: 'angular'
+            test-type: 'e2e'
+        exclude:
+          - os: macos-latest
+            node-version: 14
+    
+    env:
+      CI: true
+      TEST_TYPE: ${{ matrix.test-type || 'unit' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          NODE_ENV: development
+
+      - name: Run ${{ matrix.framework }} tests
+        run: |
+          echo "Running $TEST_TYPE tests on ${{ matrix.os }} with Node ${{ matrix.node-version }}"
+          npm run test:${{ matrix.framework }}:$TEST_TYPE
+        shell: bash
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.os }}-node${{ matrix.node-version }}-${{ matrix.framework }}
+          path: test-results.xml
+
+  deploy:
+    name: Deploy após testes
+    needs: test-matrix
+    runs-on: ubuntu-latest
+    if: success()
+    
+    steps:
+      - name: Consolidate test results
+        run: |
+          echo "Todos os testes da matriz foram concluídos com sucesso!"
+          echo "Versões testadas:"
+          echo "${{ toJSON(needs.test-matrix.outputs) }}"
