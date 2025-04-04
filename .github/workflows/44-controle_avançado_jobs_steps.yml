@@ -68,6 +68,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     concurrency: production-deploy
+    strategy:
+      matrix:
+        region: ["us-east-1", "us-west-2", "eu-central-1"]
+    
     
     steps:
       - name: Validar ambiente
@@ -78,9 +82,6 @@ jobs:
       # Step com matriz dinâmica
       - name: Deploy para regiões
         run: ./deploy.sh ${{ matrix.region }}
-        strategy:
-          matrix:
-            region: ["us-east-1", "us-west-2", "eu-central-1"]
 
       # Step com retry
       - name: Verificação pós-deploy
