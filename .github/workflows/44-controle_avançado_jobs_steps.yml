@@ -86,8 +86,6 @@ jobs:
       # Step com retry
       - name: Verificação pós-deploy
         timeout-minutes: 3
-        retry-on-error: true
-        max-retries: 2
         run: ./healthcheck.sh
 
   notify:
