@@ -91,17 +91,6 @@ jobs:
         with:
           name: build-output
           
-      # Step 2: Deploy condicional
-      - name: Deploy to production
-        run: ./deploy.sh ${{ inputs.environment }}
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        if: |
-          github.ref == 'refs/heads/main' &&
-          needs.build-and-test.outputs.build-status == 'success' &&
-          (github.event_name == 'workflow_dispatch' || github.event_name == 'push')
-          
       # Step 3: Notificação
       - name: Send notification
         uses: actions/slack-notify@v1
