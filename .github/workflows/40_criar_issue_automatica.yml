@@ -20,13 +20,13 @@ jobs:
           REPO_OWNER: ${{ github.repository_owner }}
           ISSUE_TITLE: ${{ inputs.issue-title }}
           ISSUE_BODY: ${{ inputs.issue-body }}
-        run: |
-          curl -X POST \
-          -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/$REPO_OWNER/estudo-actions/issues \
-          -d '{
-            "title": "'"$ISSUE_TITLE"'",
-            "body": "'"$ISSUE_BODY"'\n\nCriada por: @'"${{ github.actor }}"'\nWorkflow: '"${{ github.workflow }}"'\nExecução: '"${{ github.run_id }}"'",
-            "labels": ["automated"]
-          }'
+        run: | 
+             curl --silent --request POST \
+                  --url https://api.github.com/repos/${{ github.repository }}/issues \
+                  --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                  --header 'content-type: application/json' \
+                  --data '{
+                  "title": "${ISSUE_TITLE}",
+            "body": "${ ISSUE_BODY }\n\n The commit hash was: _${{ github.sha }} }}_."
+          }' \
+          -- fail
