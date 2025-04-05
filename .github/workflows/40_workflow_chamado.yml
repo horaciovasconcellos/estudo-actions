@@ -1,0 +1,45 @@
+name: 40_workflow_chamado
+
+on:
+  workflow_call:
+    inputs:
+      target_runner:
+        description: "Runner type from matrix"
+        type: string
+        required: true
+      target_environment:
+        description: "Environment (Dev/Homologacao/Producao)"
+        type: string
+        required: true
+      runner_tags:
+        description: "Tags for self-hosted runners"
+        type: string
+        default: "none"
+    env:
+      COMPANY_ENV:
+        description: "Company name from caller"
+        required: true
+      DEPLOY_KEY:
+        description: "Deployment key"
+        required: false
+
+jobs:
+  execute:
+    name: Run on ${{ inputs.target_runner }} (${{ inputs.target_environment }})
+    runs-on: ${{ inputs.target_runner }}
+    steps:
+      - name: Print All Parameters
+        run: |
+          echo "🛠️ Runner: ${{ inputs.target_runner }}"
+          echo "🏷️ Tags: ${{ inputs.runner_tags }}"
+          echo "🌐 Environment: ${{ inputs.target_environment }}"
+          echo "🏢 Company: ${{ env.COMPANY_ENV }}"
+          echo "🔑 Deploy Key: ${{ env.DEPLOY_KEY != '' && '***' || 'NOT_SET' }}"
+
+      - name: Environment-Specific Step
+        if: inputs.target_environment == 'Producao'
+        run: echo "🚀 DEPLOYING TO PRODUCTION (Runner: ${{ runner.os }})"
+
+      - name: Self-Hosted Setup
+        if: contains(inputs.runner_tags, 'self-hosted')
+        run: echo "⚙️ Custom setup for self-hosted runner"
