@@ -11,18 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        runner: ["ubuntu-latest", "self-hosted-linux", "macos-latest"]
+        runner: ["ubuntu-latest", "self-hosted", "macos-latest"]
         environment: ["DESENVOLVIMENTO", "HOMOLOGACAO", "PRODUCAO"]
         include:
-          - runner: "self-hosted-linux"
+          - runner: "self-hosted"
             tags: "linux,x64"
           - runner: "macos-latest"
             tags: "macos,arm64"
     steps:
       - name: Invoke Called Workflow
-        uses: .github/workflows/40_workflow_chamado@main
+        uses: ./.github/workflows/40_workflow_chamado
         with:
-          workflow: .github/workflows/40_workflow_chamado.yml
+          workflow: ./.github/workflows/40_workflow_chamado.yml
           inputs: |
             {
               "target_runner": "${{ matrix.runner }}",
