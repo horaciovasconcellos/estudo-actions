@@ -1,0 +1,36 @@
+name: 40_workflow_chamador
+
+on:
+  workflow_dispatch:
+env:
+  COMPANY_NAME: "ACME Corp"
+
+jobs:
+  trigger-matrix-workflows:
+    name: Trigger Matrix Workflows
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runner: ["ubuntu-latest", "self-hosted-linux", "macos-latest"]
+        environment: ["DESENVOLVIMENTO", "HOMOLOGACAO", "PRODUCAO"]
+        include:
+          - runner: "self-hosted-linux"
+            tags: "linux,x64"
+          - runner: "macos-latest"
+            tags: "macos,arm64"
+    steps:
+      - name: Invoke Called Workflow
+        uses: actions/workflow-call@v1
+        with:
+          workflow: .github/workflows/40_workflow_chamado.yml
+          inputs: |
+            {
+              "target_runner": "${{ matrix.runner }}",
+              "target_environment": "${{ matrix.environment }}",
+              "runner_tags": "${{ matrix.tags || 'github-hosted' }}"
+            }
+          env: |
+            {
+              "COMPANY_ENV": "${{ env.COMPANY_NAME }}",
+              "DEPLOY_KEY": "${{ secrets.DEPLOY_KEY }}"
+            }
