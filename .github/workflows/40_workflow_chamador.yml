@@ -20,7 +20,7 @@ jobs:
             tags: "macos,arm64"
     steps:
       - name: Invoke Called Workflow
-        uses: ./.github/workflows/40_workflow_chamado
+        uses: horaciovasconcellos/estudo-actions/actions/workflows/40_workflow_chamado
         with:
           workflow: ./.github/workflows/40_workflow_chamado.yml
           inputs: |
