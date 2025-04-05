@@ -1,5 +1,4 @@
 name: 40_workflow_chamado
-
 on:
   workflow_call:
     inputs:
@@ -37,8 +36,8 @@ jobs:
           echo "🔑 Deploy Key: ${{ env.DEPLOY_KEY != '' && '***' || 'NOT_SET' }}"
 
       - name: Environment-Specific Step
-        if: inputs.target_environment == 'Producao'
-        run: echo "🚀 DEPLOYING TO PRODUCTION (Runner: ${{ runner.os }})"
+        if: inputs.target_environment == 'PRODUCAO'
+        run: echo "🚀 DEPLOYING TO PRODUCTION Runner:"
 
       - name: Self-Hosted Setup
         if: contains(inputs.runner_tags, 'self-hosted')
