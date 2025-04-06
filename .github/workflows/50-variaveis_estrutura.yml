@@ -8,7 +8,11 @@ on:
   workflow_dispatch:
 env:
   MINHA_VARIAVEL: "valor_da_variavel"
-
+  ESTUDANTE: |
+    - firstname: Jean    # element, no indentation
+      name: Dupont       # property of the same element
+    - firstname: Marine  # new element
+      name: Leblanc 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -20,4 +24,7 @@ jobs:
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
-      run: echo "Hello ${ env.MINHA_VARIAVEL }"
+      run: |
+             echo "Hello ${ MINHA_VARIAVEL }"
+             echo "Hello ${ ESTUDANTE.name }"
+      
