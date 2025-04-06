@@ -1,4 +1,4 @@
-name: PR Auto Trigger
+name: 51_pull_request.yml
 on:
   workflow_dispatch:
   
