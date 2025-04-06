@@ -33,5 +33,5 @@ jobs:
         run: |
                echo  The tags are ${{ inputs.tags }} 
                echo  The tags are ${{ inputs.print_tags }} 
-               echo  The tags are ${{ inputs.environment }} 
+               echo  The tags are ${{ github.event.inputs.environment }} 
                echo  The tags are ${{ inputs.logLevel }}
