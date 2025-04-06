@@ -26,6 +26,7 @@ on:
 
 jobs:
   print-tag:
+    name: Horacio
     runs-on: ubuntu-latest
     if: ${{ inputs.print_tags }} 
     steps:
