@@ -1,28 +1,37 @@
-# This is a basic workflow that is manually triggered
+name: Exemplo com Múltiplos Jobs
 
-name: 52_nao_sei_a_ordem
+on: [workflow_dispatch]
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
-on:
-  workflow_dispatch:
 jobs:
-  job1:
+  # Job 1: Escreve no arquivo
+  escrever-arquivo:
     runs-on: ubuntu-latest
     steps:
-        - run: |
-                dayOfWeek=$(date +%u) # calculates the day of the week
-                if ($dayOfWeek > 5)
-                    then
-                   exit 1
-                fi
-  job2:
-     runs-on: ubuntu-latest
-     needs: job1
-     steps:
-        - run: echo "Something went wrong"
-  job3:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Criar arquivo
+        run: |
+          echo "Esta mensagem foi gerada em $(date)" > output.txt
+          cat output.txt  # Exibe o conteúdo (opcional)
+          
+      - name: Upload do arquivo
+        uses: actions/upload-artifact@v3
+        with:
+          name: arquivo-output
+          path: output.txt
+
+  # Job 2: Lê o arquivo (depende do Job 1)
+  ler-arquivo:
+    needs: escrever-arquivo  # Espera o Job 1 completar
     runs-on: ubuntu-latest
-    needs: job2
     steps:
-        - run: echo "I am running whatever happens"
+      - name: Download do arquivo
+        uses: actions/download-artifact@v3
+        with:
+          name: arquivo-output
+          
+      - name: Exibir conteúdo
+        run: |
+          echo "Conteúdo do arquivo:"
+          cat output.txt
