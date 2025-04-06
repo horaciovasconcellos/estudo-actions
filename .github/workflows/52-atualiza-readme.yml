@@ -22,7 +22,7 @@ jobs:
       - name: Update README with WakaTime stats
         uses: athul/waka-readme@master
         with:
-          GH_TOKEN: ${{ secrets.GITHUB_KEY }} 
+          GH_TOKEN: ${{ secrets.MKDOCS_TOKEN_PAT_ESTUDO }} 
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
           ### meta
           REPOSITORY: horaciovasconcellos/horaciovasconcellos # optional
