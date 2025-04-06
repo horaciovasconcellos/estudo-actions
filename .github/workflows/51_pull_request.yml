@@ -1,0 +1,21 @@
+name: PR Auto Trigger
+on:
+  workflow_dispatch:
+  
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+
+jobs:
+  check-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Print PR details
+        run: |
+          echo "PR Número: ${{ github.event.number }}"
+          echo "Título: ${{ github.event.pull_request.title }}"
+          echo "Autor: ${{ github.event.pull_request.user.login }}"
