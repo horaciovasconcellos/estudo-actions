@@ -1,0 +1,35 @@
+name: 52-YAML
+on:
+  pull_request:
+    paths:
+      - '**.yml'           # Monitora todos arquivos .yml
+      - '!test/**/*.yml'   # Ignora .yml dentro da pasta test
+
+jobs:
+  validate-yml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necessário para verificar diferenças entre commits
+
+      - name: Get changed YAML files
+        id: changed-files
+        uses: tj-actions/changed-files@v42
+        with:
+          files: |
+            **.yml
+            !test/**/*.yml
+
+      - name: List modified YAML files
+        run: |
+          echo "Arquivos YAML modificados (exceto em /test):"
+          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+          
+      - name: Validate YAML syntax
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "Validando $file"
+            yamllint "$file" || exit 1
+          done
