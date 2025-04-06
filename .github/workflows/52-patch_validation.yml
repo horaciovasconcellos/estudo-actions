@@ -1,6 +1,8 @@
 name: 52-patch_validation
 
 on:
+  workflow_dispatch:
+  
   push:
     branches:
       - main                   # Só executa na branch main
