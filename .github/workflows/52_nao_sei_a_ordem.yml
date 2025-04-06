@@ -10,20 +10,19 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-              echo "Hello"
+        - run: |
+                dayOfWeek=$(date +%u) # calculates the day of the week
+                if ($dayOfWeek > 5)
+                    then
+                   exit 1
+                fi
   job2:
-    needs: job1
-    runs-on: ubuntu-latest
-    steps:
-       - run: echo "how"
+     runs-on: ubuntu-latest
+     needs: job1
+     steps:
+        - run: echo "Something went wrong"
   job3:
-    needs: [job1, job2]
     runs-on: ubuntu-latest
+    needs: job2
     steps:
-       - run: |
-               echo "are"
-  job4:
-   runs-on: ubuntu-latest
-   steps:
-         - run: echo "you?"
+        - run: echo "I am running whatever happens"
