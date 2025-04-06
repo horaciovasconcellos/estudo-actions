@@ -16,7 +16,7 @@ jobs:
           cat output.txt  # Exibe o conteúdo (opcional)
           
       - name: Upload do arquivo
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: arquivo-output
           path: output.txt
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download do arquivo
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: arquivo-output
           
