@@ -1,3 +1,4 @@
+
 name: 52-atualiza-readme
 on:
   workflow_dispatch:
@@ -13,4 +14,9 @@ jobs:
       - uses: athul/waka-readme@master
         with:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+          
       - uses: gautamkrishnar/keepalive-workflow@v2
+        with: 
+          commit_message: 'Mensagem de Execução'
+          committer_username: 'HVasconcellos'
+          committer_email: 'horacio.vasconcellos@gmail.com'
