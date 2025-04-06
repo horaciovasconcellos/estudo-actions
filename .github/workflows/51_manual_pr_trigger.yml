@@ -1,0 +1,19 @@
+name: 51_manual_pr_trigger
+on:  
+
+  workflow_dispatch:
+
+
+jobs:
+  log-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.inputs.pr_number }}/merge
+
+      - name: Print PR info
+        run: |
+          echo "PR Número: ${{ github.event.inputs.pr_number }}"
+          echo "Título do PR: ${{ github.event.pull_request.title }}"  # Só funciona se o workflow for disparado via API
