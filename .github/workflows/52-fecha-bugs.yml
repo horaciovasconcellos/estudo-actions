@@ -1,0 +1,48 @@
+name: 52-fecha-bugs
+on:
+  schedule:
+    # Executa às 19:30 UTC (16:30 BRT) de segunda a sexta-feira
+    - cron: '30 19 * * 1-5'
+  workflow_dispatch:  # Permite execução manual
+
+jobs:
+  fechar-bugs-antigos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar bugs antigos
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'bug',
+              sort: 'created',
+              direction: 'asc',
+              per_page: 100
+            });
+
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - 30); // 30 dias atrás
+
+            for (const issue of issues) {
+              const createdAt = new Date(issue.created_at);
+              if (createdAt < cutoffDate) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+                
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: 'Este bug foi fechado automaticamente por estar aberto há mais de 30 dias sem atualização. Se ainda for relevante, por favor reabra.'
+                });
+                
+                console.log(`Fechado bug #${issue.number}: ${issue.title}`);
+              }
+            }
