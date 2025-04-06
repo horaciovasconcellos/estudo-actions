@@ -1,4 +1,3 @@
-
 name: 52-atualiza-readme
 on:
   workflow_dispatch:
@@ -10,13 +9,20 @@ jobs:
     name: Update this repo's README
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: athul/waka-readme@master
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update README with WakaTime stats
+        uses: athul/waka-readme@v1
         with:
-          WAKATIME_API_KEY: ${{ secrets.GITHUB_KEY}}
-          
-      - uses: gautamkrishnar/keepalive-workflow@v2
+          WAKATIME_API_KEY: ${{ secrets.GITHUB_KEY }}
+
+      - name: Keep workflow alive
+        uses: gautamkrishnar/keepalive-workflow@v2
         with: 
           commit_message: 'Mensagem de Execução'
           committer_username: 'HVasconcellos'
           committer_email: 'horacio.vasconcellos@gmail.com'
+
+      - name: Log completion
+        run: echo "Workflow concluído com sucesso."
