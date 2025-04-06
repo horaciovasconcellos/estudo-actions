@@ -21,7 +21,11 @@ jobs:
         uses: athul/waka-readme@master
         with:
           WAKATIME_API_KEY: ${{ secrets.GITHUB_KEY }}
-
+          TARGET_BRANCH: main
+          COMMITTER_NAME: 'HVasconcellos'
+          COMMITTER_EMAIL: 'horacio.vasconcellos@gmail.com'
+          AUTHOR_NAME: 'HVasconcellos'
+          AUTHOR_EMAIL: 'horacio.vasconcellos@gmail.com'
       - name: Keep workflow alive
         uses: gautamkrishnar/keepalive-workflow@v2
         with: 
