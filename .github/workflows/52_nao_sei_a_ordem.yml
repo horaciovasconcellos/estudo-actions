@@ -1,0 +1,29 @@
+# This is a basic workflow that is manually triggered
+
+name: 52_nao_sei_a_ordem
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+              echo "Hello"
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
+       - run: echo "how"
+  job3:
+    needs: [job1, job2]
+    runs-on: ubuntu-latest
+    steps:
+       - run: |
+               echo "are"
+  job4:
+   runs-on: ubuntu-latest
+   steps:
+         - run: echo "you?"
