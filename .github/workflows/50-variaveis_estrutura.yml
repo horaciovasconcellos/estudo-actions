@@ -25,6 +25,6 @@ jobs:
     # Runs a single command using the runners shell
     - name: Send greeting
       run: |
-             echo "Hello ${ MINHA_VARIAVEL }"
-             echo "Hello ${ ESTUDANTE.name }"
+             echo "Hello $MINHA_VARIAVEL"
+             echo "Hello $ESTUDANTE.name"
       
