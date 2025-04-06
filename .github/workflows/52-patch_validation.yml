@@ -1,0 +1,31 @@
+name: 52-patch_validation
+
+on:
+  push:
+    branches:
+      - main                   # Só executa na branch main
+    paths:
+      - 'resource/**'          # Só aciona se houver mudanças em resource/
+    paths-ignore:
+      - 'java/**'              # Ignora qualquer alteração em java/
+
+jobs:
+  validate-resources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: List modified files (debug)
+        run: |
+          echo "Arquivos modificados (exceto java/):"
+          git diff --name-only HEAD^ HEAD -- . ':!java/**'
+
+      - name: Validate Resource Changes
+        run: |
+          if [ -n "$(git diff --name-only HEAD^ HEAD -- resource/)" ]; then
+            echo "✅ Alterações válidas em resource/ detectadas"
+            # Adicione comandos de validação aqui (ex: testes, scripts)
+          else
+            echo "❌ Nenhuma alteração em resource/ (workflow não deveria ter sido acionado)"
+          fi
