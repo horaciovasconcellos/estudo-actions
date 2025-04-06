@@ -8,23 +8,47 @@ on:
   workflow_dispatch:
 env:
   MINHA_VARIAVEL: "valor_da_variavel"
-  ESTUDANTE: |
-    - firstname: Jean    # element, no indentation
-      name: Dupont       # property of the same element
-    - firstname: Marine  # new element
-      name: Leblanc 
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  greet:
-    # The type of runner that the job will run on
+  process-students:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: |
-             echo "Hello $MINHA_VARIAVEL"
-             echo "Hello $ESTUDANTE.name"
+      - name: Install yq
+        run: sudo apt-get update && sudo apt-get install -y yq jq
+        
+      - name: Parse and print students
+        run: |
+          # Salva os dados YAML em um arquivo
+          cat <<EOF > students.yml
+          students:
+            - firstname: Jean
+              name: Dupont
+            - firstname: Marine
+              name: Leblanc
+          EOF
+          # Extrai firstnames
+          echo "Firstnames:"
+          yq eval '.students[].firstname' students.yml
+
+          # Extrai nomes completos
+          echo "Full names:"
+          yq eval '.students[] | .firstname + " " + .name' students.yml
+
+      - name: Parse and print students
+        run: |
+          # Define os dados em JSON (simulando conversão de YAML)
+          echo '{
+            "students": [
+              {"firstname": "Jean", "name": "Dupont"},
+              {"firstname": "Marine", "name": "Leblanc"}
+            ]
+          }' > students.json
+
+          # Extrai firstnames
+          echo "Firstnames:"
+          jq '.students[].firstname' students.json
+
+          # Extrai nomes completos
+          echo "Full names:"
+          jq '.students[] | "\(.firstname) \(.name)"' students.json
       
