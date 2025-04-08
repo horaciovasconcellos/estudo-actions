@@ -1,4 +1,4 @@
-name: CI
+name: 20250408_107700
 on:
   workflow_dispatch:
     inputs:
@@ -22,5 +22,5 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-               echo "alo... ${{ inputs.nome }}
+               echo "alo... ${{ inputs.nome }}"
 
