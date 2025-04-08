@@ -1,0 +1,15 @@
+# Dependências principais
+flask==3.0.2
+requests==2.31.0
+python-dotenv==1.0.0
+sqlalchemy==2.0.25
+psycopg2-binary==2.9.9
+
+# Dev dependencies (opcional)
+pytest==8.0.2
+flake8==6.1.0
+python-decouple==3.8
+
+# Framework (exemplo com Django)
+django==5.0.3
+djangorestframework==3.14.0
