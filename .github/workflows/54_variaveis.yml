@@ -1,0 +1,65 @@
+# This is a basic workflow that is manually triggered
+
+name: 54_variaveis
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "greet"
+  greet:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+    - name: Send greeting
+      run: |
+            echo "Variáveis do Githib: $CI"
+            echo "Variáveis do Githib: $CI"
+            echo "Variáveis do Githib: $GITHUB_ACTION"
+            echo "Variáveis do Githib: $GITHUB_ACTION_PATH"
+            echo "Variáveis do Githib: $GITHUB_ACTION_REPOSITORY"
+            echo "Variáveis do Githib: $GITHUB_ACTIONS"
+            echo "Variáveis do Githib: $GITHUB_ACTOR"
+            echo "Variáveis do Githib: $GITHUB_ACTOR_ID"
+            echo "Variáveis do Githib: $GITHUB_API_URL"
+            echo "Variáveis do Githib: $GITHUB_BASE_REF"
+            echo "Variáveis do Githib: $GITHUB_ENV"
+            echo "Variáveis do Githib: $GITHUB_EVENT_NAME"
+            echo "Variáveis do Githib: $GITHUB_EVENT_PATH"
+            echo "Variáveis do Githib: $GITHUB_GRAPHQL_URL"
+            echo "Variáveis do Githib: $GITHUB_HEAD_REF"
+            echo "Variáveis do Githib: $GITHUB_JOB"
+            echo "Variáveis do Githib: $GITHUB_OUTPUT"
+            echo "Variáveis do Githib: $GITHUB_PATH"
+            echo "Variáveis do Githib: $GITHUB_REF"
+            echo "Variáveis do Githib: $GITHUB_REF_NAME"
+            echo "Variáveis do Githib: $GITHUB_REF_PROTECTED"
+            echo "Variáveis do Githib: $GITHUB_REF_TYPE"
+            echo "Variáveis do Githib: $GITHUB_REPOSITORY"
+            echo "Variáveis do Githib: $GITHUB_REPOSITORY_ID"
+            echo "Variáveis do Githib: $GITHUB_REPOSITORY_OWNER"
+            echo "Variáveis do Githib: $GITHUB_REPOSITORY_OWNER_ID"
+            echo "Variáveis do Githib: $GITHUB_RETENTION_DAYS"
+            echo "Variáveis do Githib: $GITHUB_RUN_ATTEMPT"
+            echo "Variáveis do Githib: $GITHUB_RUN_ID"
+            echo "Variáveis do Githib: $GITHUB_RUN_NUMBER"
+            echo "Variáveis do Githib: $GITHUB_SERVER_URL"
+            echo "Variáveis do Githib: $GITHUB_SHA"
+            echo "Variáveis do Githib: $GITHUB_STEP_SUMMARY"
+            echo "Variáveis do Githib: $GITHUB_TRIGGERING_ACTOR"
+            echo "Variáveis do Githib: $GITHUB_WORKFLOW"
+            echo "Variáveis do Githib: $GITHUB_WORKFLOW_REF"
+            echo "Variáveis do Githib: $GITHUB_WORKFLOW_SHA"
+            echo "Variáveis do Githib: $RUNNER_ARCH"
+            echo "Variáveis do Githib: $RUNNER_DEBUG"
+            echo "Variáveis do Githib: $RUNNER_NAME"
+            echo "Variáveis do Githib: $RUNNER_OS"
+            echo "Variáveis do Githib: $RUNNER_TEMP"
+            echo "Variáveis do Githib: $RUNNER_TOOL_CACHE"
