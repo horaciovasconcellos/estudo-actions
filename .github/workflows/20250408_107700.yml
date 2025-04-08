@@ -23,4 +23,14 @@ jobs:
       - name: Run a one-line script
         run: |
                echo "alo... ${{ inputs.nome }}"
-
+               
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        id: env_var
+        run: |
+              echo "env_var=TUDO do env_var" >> $GITHUB_ENV
+      - name: Recupera o valor
+        run: |
+              echo "Resultado: $env_var" 
+        
+        
