@@ -1,4 +1,4 @@
-name: Node Version in a container
+name: manual-node-in-a-container.yml
 
 on:
   workflow_dispatch:
