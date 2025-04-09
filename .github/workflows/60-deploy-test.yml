@@ -1,0 +1,11 @@
+name: 60-deploy-test
+
+on:
+  workflow_dispatch:
+
+jobs:  
+    dev-job:
+      environment: Dev
+      runs-on: ubuntu-latest
+      steps:
+        - run: echo "${{ vars.ENV_VAL }}"  >> $GITHUB_STEP_SUMMARY
