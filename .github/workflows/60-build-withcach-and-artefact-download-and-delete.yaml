@@ -2,7 +2,7 @@ name: 60-build-withcach-and-artefact-download-and-delete.yaml
 
 on:
   workflow_dispatch:
-  push:
+
 
 run-name: Cache, artefact and download test by ${{ github.actor }}
 
