@@ -1,0 +1,8 @@
+name: 60-reusable-node.yml
+on:
+  workflow_dispatch:
+jobs:
+  ci:
+    steps:  
+     - name: run build process
+       uses: horaciovasconcellos/.github/workflows/gha.workflows.build-node.yml@main
