@@ -7,8 +7,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout code
+    - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Verificar arquivo de lock
+      run: |
+        if [ ! -f package-lock.json ]; then
+          echo "Erro: Arquivo package-lock.json não encontrado!"
+          exit 1
+        fi
+        npm install --package-lock-only
+
     - name: Restore Cache
       id: cache
       uses: actions/cache@v4
@@ -17,16 +26,20 @@ jobs:
         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-npm-
+
     - name: Use Node.js 14.x
       uses: actions/setup-node@v4
       with:
         node-version: 14.x
         cache: 'npm'
-    - name: run build
+
+    - name: Run build
       run: |
-            npm install express
-            npm ci
+        npm install
+        npm ci
+
     - run: npm run build --if-present    
+
     - name: Save Cache    
       if: steps.cache.outputs.cache-hit != 'true'
       uses: actions/cache@v4
