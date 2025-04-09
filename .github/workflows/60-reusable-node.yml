@@ -5,4 +5,4 @@ jobs:
   ci:
     steps:  
      - name: run build process
-       uses: horaciovasconcellos/.github/workflows/gha.workflows.build-node.yml@main
+       uses: horaciovasconcellos/GHA.workflows/.github/workflows/gha.workflows.build-node.yml@main
