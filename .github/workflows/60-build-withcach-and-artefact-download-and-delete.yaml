@@ -1,4 +1,4 @@
-name: Node.js CI - with cache and artefact and download and delete
+name: 60-build-withcach-and-artefact-download-and-delete.yaml
 
 on:
   workflow_dispatch:
@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Restore Cache
       id: cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.npm
         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-npm-
     - name: Use Node.js 14.x
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 14.x
         cache: 'npm'
@@ -30,7 +30,7 @@ jobs:
     - run: npm run build --if-present    
     - name: Save Cache    
       if: steps.cache.outputs.cache-hit != 'true'
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.npm
         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -44,12 +44,12 @@ jobs:
     needs: [ build ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: my-app
           path: downloaded-content
       - run: |
           ls downloaded-content
-      - uses: geekyeggo/delete-artifact@v2
+      - uses: geekyeggo/delete-artifact@v5
         with:
             name: my-app
