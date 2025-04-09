@@ -19,11 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ needs.random-number-generator.outputs.is-even == 0 }}
     steps:
-      - run: echo "The number is ${{ needs.random-number-generator.outputs.number }} is odd"
+      - run: echo "O numero ${{ needs.random-number-generator.outputs.number }} is odd"
 
   consumer-of-generator-even:
     needs: random-number-generator
     runs-on: ubuntu-latest
     if: ${{ needs.random-number-generator.outputs.is-even == 1 }}
     steps:
-      - run: echo "The number is ${{ needs.random-number-generator.outputs.number }} is even"
+      - run: echo "O numero ${{ needs.random-number-generator.outputs.number }} é par"
