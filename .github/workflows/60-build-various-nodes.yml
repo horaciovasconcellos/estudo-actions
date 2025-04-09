@@ -1,4 +1,4 @@
-name: Node.js CI - different engines
+name: 60-build-various-nodes
 
 on:
   workflow_dispatch:
