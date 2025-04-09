@@ -1,0 +1,11 @@
+name: 60-deploy-live
+
+on:
+  workflow_dispatch:
+  
+jobs:
+    live-job:
+      environment: Live
+      runs-on: ubuntu-latest
+      steps:
+        - run: echo "${{ vars.ENV_VAL }}"  >> $GITHUB_STEP_SUMMARY
