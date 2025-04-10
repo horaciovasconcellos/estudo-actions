@@ -13,4 +13,23 @@ jobs:
       - name: Impressao do Patch
         run: |
               echo "Impressao do $PATH"
-          
+  impressao_var:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Salva variavel
+        run: |
+               echo "nome_da_variavel=101010" >> $GITHUB_ENV
+      - name: Imprime a variavel
+        run: |
+               echo "Impressao da varivael: $nome_da_variavel"
+
+  impressao_out:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Salva variavel
+        id: saida
+        run: |
+               echo "nome_da_variavel=101010" >> $GITHUB_OUTPUT
+      - name: Imprime a variavel
+        run: |
+               echo "Impressao da varivael: ${{ steps.saida.outputs.nome_da_variavel }}"  
