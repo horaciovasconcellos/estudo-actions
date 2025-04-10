@@ -2,7 +2,8 @@ name: 61-patch
 run-name: Horacio patch
 on:
   workflow_dispatch:
-
+env:
+  dia_da_semana: "Sabado"
 jobs:
   impressao:
     runs-on: ubuntu-latest
@@ -15,6 +16,7 @@ jobs:
               echo "Impressao do $PATH"
   impressao_var:
     runs-on: ubuntu-latest
+    needs: impressao
     steps:
       - name: Salva variavel
         run: |
@@ -25,6 +27,7 @@ jobs:
 
   impressao_out:
     runs-on: ubuntu-latest
+    needs: impressao_var
     steps:
       - name: Salva variavel
         id: saida
@@ -33,3 +36,11 @@ jobs:
       - name: Imprime a variavel
         run: |
                echo "Impressao da varivael: ${{ steps.saida.outputs.nome_da_variavel }}"  
+
+  impressao_env:
+    runs-on: ubuntu-latest
+    needs: impressao_out
+    steps:
+      - name: Impressao env
+        run: |
+               echo "Impressao: $dia_da_semana"
