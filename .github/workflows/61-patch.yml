@@ -7,6 +7,9 @@ env:
 jobs:
   impressao:
     runs-on: ubuntu-latest
+    defaults:
+       run:
+        working-directory: /scripts  
     steps:
       - name: Salva o path
         run: |
