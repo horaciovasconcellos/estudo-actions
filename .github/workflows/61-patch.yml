@@ -1,0 +1,16 @@
+name: 61-patch
+run-name: Horacio patch
+on:
+  workflow_dispatch:
+
+jobs:
+  impressao:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Salva o path
+        run: |
+              echo "$GITHUB_WORKSPACE/horacio" >> $GITHUB_PATH
+      - name: Impressao do Patch
+        run: |
+              echo "Impressao do $PATH"
+          
