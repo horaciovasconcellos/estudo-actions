@@ -1,0 +1,49 @@
+name: Commit new file
+
+on:
+  workflow_dispatch:
+    inputs:
+      file_name:
+        description: 'Name of the file to be created'
+        required: true
+        default: 'new-file.txt'
+      file_content:
+        description: 'Content of the file to be created'
+        required: true
+        default: 'Hello, world!'
+
+jobs:
+  create_file_and_upload_artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create new file
+        run: |
+          echo "${{ github.event.inputs.file_content }}" > "${{ github.event.inputs.file_name }}"
+
+      - name: Upload file as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-artifact
+          path: "${{ github.event.inputs.file_name }}"
+
+  download_artifact_and_push_changes:
+    needs: create_file_and_upload_artifact
+    runs-on: ubuntu-latest
+    environment: 'production' # specify the environment here
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifact
+
+      - name: Push changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add "${{ github.event.inputs.file_name }}"
+          git commit -m "Add new file: ${{ github.event.inputs.file_name }}"
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git

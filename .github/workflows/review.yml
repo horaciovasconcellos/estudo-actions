@@ -1,0 +1,29 @@
+name: review
+
+on:
+  workflow_run: 
+    workflows: ['submit-sbom']
+    types: [completed]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ toJson(github.event) }}"
+  review:
+    if: ${{ github.event.workflow_run.event == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v3
+        with:
+          retry-on-snapshot-warnings: true
+          retry-on-snapshot-warnings-timeout: 600
+          comment-summary-in-pr: 'on-failure'
+          license-check: false
+          fail-on-severity: 'high'

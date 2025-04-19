@@ -1,0 +1,25 @@
+name: Add comment to PR
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Comment on PR
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const issue_number = 73; // replace with your PR number
+          const owner = context.repo.owner;
+          const repo = context.repo.repo;
+          const message = 'This is a scheduled comment.'; // replace with your comment
+          await github.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body: message,
+          });

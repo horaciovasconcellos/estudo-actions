@@ -1,0 +1,39 @@
+name: Worflow commands
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run a one-line script
+        run: |
+          echo "::error::  This is an error"
+          echo "::error file=TriggerRepositoryDispatchWorkflow.sh,line=11,col=71,endColumn=76::Weird name"
+          echo "::warning::  This is a warning"
+          echo "::group::This is a group"
+          echo "This is a group"
+          echo "This is a group"
+          echo "::endgroup::"
+      
+      - name: Set en environment variable
+        run: echo "FOO=bar" >> $GITHUB_ENV
+      
+      - name: Print the environment variable
+        run: echo $FOO
+
+      - name: Set color
+        id: color-selector
+        run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
+
+      - name: Get color
+        env:
+          SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
+        run: echo "The selected color is $SELECTED_COLOR"
+
+      - name: Set summary
+        run: echo "### Hello world! :rocket:" >> $GITHUB_STEP_SUMMARY
+

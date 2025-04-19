@@ -1,0 +1,66 @@
+name: Manual trigger workflow with parameters
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Action to perform"
+        required: true
+        type: string
+      aws_account:
+        description: "AWS Account Number"
+        required: true
+        type: string
+      resource_prefix:
+        description: "Resource Prefix"
+        required: true
+        type: string
+      environment:
+        description: "Environment"
+        required: true
+        type: string
+      resource_suffix:
+        description: "Resource Suffix"
+        required: false
+        type: string
+        
+jobs:  
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display input content
+        run: |
+          echo "Action: ${{ inputs.action }}"
+          echo "AWS Account: ${{ inputs.aws_account }}"
+          echo "Resource Prefix: ${{ inputs.resource_prefix }}"
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Resource Suffix: ${{ inputs.resource_suffix }}"
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       name:
+#         description: 'Name of the day'
+#         required: true
+#         type: string
+#       greeting:
+#         description: 'Greetings for the day'
+#         required: true
+#         type: string
+#       data:
+#         description: 'Data base64 encoded'
+#         required: false
+#         type: string
+
+# jobs:  
+#   greet:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Decode file content
+#         run: |
+#           echo "${{ inputs.data }}" | base64 --decode > ./decoded_file.txt
+#       - name: Display Greeting
+#         run: |
+#           echo "${{ inputs.greeting }}, ${{ inputs.name }}!"
+#       - name: Display File Content
+#         run: |
+#           echo "Contents for file"
+#           cat .decoded_file.txt

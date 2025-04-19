@@ -1,0 +1,70 @@
+name: Push Default and Deploy - Reusable Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: push-default-and-deploy-with-rw-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Before Composite action
+        run: |
+          echo "Hello from before composite action"
+
+      - name: Build and Publish .NET Core App
+        uses: devopselvis/build-test-net-core-app-custom-action@main
+        with:
+          dotnet-version: "8.0.x"
+          project-path: "${{ github.workspace }}/src/my-web-app/my-web-app.csproj"
+          output-path: "mywebapp"
+
+      - name: After Composite action
+        run: |
+          echo "Hello from after composite action"
+
+  deploy-to-dev:
+    needs: build-and-test
+    uses: devopselvis/my-github-actions-presentation/.github/workflows/deploy-to-environment-reusable.yml@main
+    with:
+      environment-name: "DEV"
+      environment-url: "http://my-web-app-please-work-dev.azurewebsites.net/"
+      artifact-name: "myapp"
+      web-app-name: ${{ vars.WEB_APP_NAME }}
+      slot-name: "dev"
+    secrets: inherit
+
+  deploy-to-staging:
+    needs: build-and-test
+    uses: devopselvis/my-github-actions-presentation/.github/workflows/deploy-to-environment-reusable.yml@main
+    with:
+      environment-name: "STAGING"
+      environment-url: "http://my-web-app-please-work-staging.azurewebsites.net/"
+      artifact-name: "myapp"
+      web-app-name: ${{ vars.WEB_APP_NAME }}
+      slot-name: "staging"
+    secrets: inherit
+
+  deploy-to-prod:
+    needs:
+      - deploy-to-staging
+      - deploy-to-dev
+    uses: devopselvis/my-github-actions-presentation/.github/workflows/deploy-to-environment-reusable.yml@main
+    with:
+      environment-name: "PROD"
+      environment-url: "http://my-web-app-please-work-prod.azurewebsites.net/"
+      artifact-name: "myapp"
+      web-app-name: ${{ vars.WEB_APP_NAME }}
+      slot-name: "prod"
+    secrets: inherit

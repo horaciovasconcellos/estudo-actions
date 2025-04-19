@@ -1,0 +1,81 @@
+name: Haiku Push - Reusable Workflow -  Deploy To Azure
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'haiku-src/**'
+
+permissions:
+  id-token: write
+
+jobs:
+  build-and-test-haiku-on-push:
+
+    name: Build and test haiku on push
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Start Build Indicator
+      run: |
+        curl -X POST "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/effects/breathe" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'color=blue' -d 'period=4' -d 'cycles=450' -d 'from_color=pink'
+    
+    - name: Build, test, and create deployment files for Haiku
+      uses: devopselvis/haiku-composite-action-build-test-upload-results@main
+      with:
+        haiku-src-path: 'haiku-src'
+
+    - name: Final build status indicator
+      if: success()
+      run: | 
+        curl -X POST "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/effects/off" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'power_off=false'
+        curl -X PUT "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/state" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'color=green'
+        
+    - name: Final build status indicator
+      if: failure()
+      run: | 
+        curl -X POST "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/effects/off" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'power_off=false'
+        curl -X PUT "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/state" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'color=red'
+
+  deploy-to-dev:
+    name: "Deploy to Azure DEV environment"
+    uses: devopselvis/haiku-reusable-workflow-deploy-app-service/.github/workflows/haiku-reusable-workflow-deploy-app-service.yml@main
+    needs:
+      - build-and-test-haiku-on-push
+    with:
+      runs-on: ubuntu-latest
+      artifact-to-deploy: deployment-package
+      env-name: DEV
+      env-url: https://gapdemodev.azurewebsites.net
+      app-name: gapdemodev
+    secrets: inherit
+
+  deploy-to-staging:
+    name: "Deploy to Azure STAGING environment"
+    uses: devopselvis/haiku-reusable-workflow-deploy-app-service/.github/workflows/haiku-reusable-workflow-deploy-app-service.yml@main
+    needs:
+      - build-and-test-haiku-on-push
+    with:
+      runs-on: ubuntu-latest
+      artifact-to-deploy: deployment-package
+      env-name: STAGING
+      env-url: https://gapdemostaging.azurewebsites.net
+      app-name: gapdemostaging
+    secrets: inherit
+
+  deploy-to-prod:
+    name: "Deploy to Azure PROD environment"
+    uses: devopselvis/haiku-reusable-workflow-deploy-app-service/.github/workflows/haiku-reusable-workflow-deploy-app-service.yml@main
+    needs:
+      - deploy-to-dev
+      - deploy-to-staging
+    with:
+      runs-on: ubuntu-latest
+      artifact-to-deploy: deployment-package
+      env-name: PROD
+      env-url: https://gapdemoprod.azurewebsites.net
+      app-name: gapdemoprod
+    secrets: inherit

@@ -1,0 +1,48 @@
+name: Context Example
+
+on: [push]
+
+jobs:
+  context-example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Print the event name"
+        run: echo "The event name is ${{ github.event_name }}"
+      - name: "Print the repository name"
+        run: echo "The repository name is ${{ github.repository }}"
+      - name: "Print the repository owner"
+        run: echo "The repository owner is ${{ github.repository_owner }}"
+      - name: "Print the ref"
+        run: echo "The ref is ${{ github.ref }}"
+      - name: "Print the sha"
+        run: echo "The sha is ${{ github.sha }}"
+      - name: "Print the actor"
+        run: echo "The actor is ${{ github.actor }}"
+      - name: "Print the workflow"
+        run: echo "The workflow is ${{ github.workflow }}"
+      - name: "Print the action"
+        run: echo "The action is ${{ github.action }}"
+      - name: "Print the job"
+        run: echo "The job is ${{ github.job }}"
+      - name: "Print the run number"
+        run: echo "The run number is ${{ github.run_number }}"
+      - name: "Print the run id"
+        run: echo "The run id is ${{ github.run_id }}"
+      - name: "Print the event"
+        run: echo "The event is ${{ toJson(github.event) }}"
+      - name: "Print the workspace"
+        run: echo "The workspace is ${{ github.workspace }}"
+      - name: "Print the sha"
+        run: echo "The sha is ${{ github.sha }}"
+      - name: "Print the head ref"
+        run: echo "The head ref is ${{ github.head_ref }}"
+      - name: "Print the base ref"
+        run: echo "The base ref is ${{ github.base_ref }}"
+      - name: "Print the server url"
+        run: echo "The server url is ${{ github.server_url }}"
+      - name: "Print the api url"
+        run: echo "The api url is ${{ github.api_url }}"
+      - name: "Print the graphql url"
+        run: echo "The graphql url is ${{ github.graphql_url }}"
+      - name: "Print the actions url"
+        run: echo "The actions url is ${{ github.actions_url }}"

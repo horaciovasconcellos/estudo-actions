@@ -1,0 +1,19 @@
+name: Sample Manual Workflow
+
+# Controls when the action will run. 
+on:
+  workflow_dispatch:
+
+jobs:
+
+  job1:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - id: myjoke
+        uses: mickeygoussetorg/get-a-dad-joke@v1
+        
+      - name: Output Dad Joke
+        run: echo "${{ steps.myjoke.outputs.dad-joke }}"

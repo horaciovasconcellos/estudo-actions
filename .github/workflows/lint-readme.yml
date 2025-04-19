@@ -1,0 +1,32 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-gh-cli-readme:
+    name: Lint ./gh-cli/README.md
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Lint ./gh-cli/README.md
+        run: node ./.github/scripts/lint-readme.js
+
+  lint-scripts-readme:
+    name: Lint ./scripts/README.md
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Lint ./scripts/README.md
+        run: node ./.github/scripts/lint-readme.js ./scripts '##' '# scripts'

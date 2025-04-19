@@ -1,0 +1,11 @@
+name: Schedule Tutorial
+on:
+  schedule:
+    - cron: '*/2 * * * *'
+
+jobs:
+  run-every-two-mins:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Runs every 2 mins'
+        run: echo "The server time is $(date)"

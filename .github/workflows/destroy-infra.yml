@@ -1,0 +1,27 @@
+name: Destroy Infrastructure
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy-infrastructure:
+    name: Destroy Infrastructure in Azure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Azure Login
+        uses: azure/login@v2.2.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run destroy script
+        run: |
+          cd infra
+          chmod +x ./delete-resources.sh
+          ./delete-resources.sh \
+            ${{ secrets.AZURE_SUBSCRIPTION_ID }} \
+            ${{ vars.AZURE_RESOURCE_GROUP_NAME}} \
+            ${{ vars.AD_APP_NAME}} \

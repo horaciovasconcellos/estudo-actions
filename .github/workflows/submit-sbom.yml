@@ -1,0 +1,17 @@
+name: submit-sbom
+
+on:
+  workflow_run: 
+    workflows: [build]
+    types: [completed]
+
+jobs:
+  submit-dependency-graph:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Retrieve dependency graph artifact and submit
+      uses: gradle/gradle-build-action@v2
+      with:
+        dependency-graph: download-and-submit

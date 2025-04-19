@@ -1,0 +1,75 @@
+name: Haiku PR Build Test Upload
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'haiku-src/**'
+
+jobs:
+  pr-build-and-test-haiku:
+
+    name: Build and test haiku on PR
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Start Build Indicator
+      run: |
+        curl -X POST "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/effects/breathe" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'color=blue' -d 'period=4' -d 'cycles=450' -d 'from_color=pink'
+    
+    - name: Checkout code
+      uses: actions/checkout@v3.5.3
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: haiku-src
+
+    - name: Run tests
+      run: npm test 
+      working-directory: haiku-src
+
+    - name: Create Test Summary
+      uses: test-summary/action@v2.1
+      with:
+        paths: ${{github.workspace}}/haiku-src/test-results.xml
+        output: ${{github.workspace}}/haiku-src/summary.md
+        show: all
+      if: always()
+
+    - name: Write test output to job summary
+      run: |
+        echo "Test Results:" >>  $GITHUB_STEP_SUMMARY
+        cat ${{github.workspace}}/haiku-src/summary.md >> $GITHUB_STEP_SUMMARY
+      if: always()
+
+    - name: Compile using Vercel
+      run: npm run build
+      working-directory: haiku-src
+
+    - name: Copy files for deployment
+      run: |
+        mkdir deploy
+        cp -r dist/index.js server.js web.config public/* views/ deploy/
+      working-directory: haiku-src
+
+    - name: Upload deployment package
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: deployment-package
+        path: haiku-src/deploy/
+
+    - name: Final build status indicator
+      if: success()
+      run: | 
+        curl -X POST "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/effects/off" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'power_off=false'
+        curl -X PUT "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/state" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'color=green'
+        
+    - name: Final build status indicator
+      if: failure()
+      run: | 
+        curl -X POST "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/effects/off" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'power_off=false'
+        curl -X PUT "https://api.lifx.com/v1/lights/${{ vars.LIFX_BULB_LOCATION }}/state" -H "Authorization: Bearer ${{ secrets.LIFX_TOKEN }}" -d 'color=red'
+      

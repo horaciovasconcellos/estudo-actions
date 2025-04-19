@@ -1,0 +1,25 @@
+name: Repository Dispatch
+
+on:
+  repository_dispatch:
+    types: [my-event-type]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Read Name and Age
+        run: |
+          echo "Name: ${{ github.event.client_payload.name }}"
+          echo "Age: ${{ github.event.client_payload.age }}"
+      
+      - name: Print Joyful Message
+        run: |
+          echo "🎉 Hello ${{ github.event.client_payload.name }}! You are ${{ github.event.client_payload.age }} years old! 🎉"
+
+
+      

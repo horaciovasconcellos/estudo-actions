@@ -1,0 +1,19 @@
+name: Condition-Demo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  hello-world:
+    if: github.repository == 'v2-accelerators/github-actions-certification-practicedssd'
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Hello World"
+        run: echo "Hello World"
+  goodbye-noon:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Goodbye Noon"
+        run: echo "Goodbye Noon"

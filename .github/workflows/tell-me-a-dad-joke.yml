@@ -1,0 +1,34 @@
+name: Tell Me A Dad Joke
+
+on:
+  # workflow_dispatch:
+  issues:
+    types:
+      - labeled
+
+jobs:
+  
+  GetDadJoke:
+    
+    runs-on: ubuntu-latest
+    if: ${{ github.event.label.name == 'dadjoke' }}
+    
+    steps:
+     
+      - name: Get Dad Joke
+        id: get-dad-joke
+        run: |
+          JOKE=$(curl -H "Accept: text/plain" https://icanhazdadjoke.com/)
+          echo "================================================================="
+          echo "$JOKE"
+          echo "::set-output name=dadjoke::$JOKE"
+          
+      - name: Output Dad Joke
+        run: echo "${{ steps.get-dad-joke.outputs.dadjoke }}"
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            DAD JOKE - "${{ steps.get-dad-joke.outputs.dadjoke }}"

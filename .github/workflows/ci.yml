@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+      security-events: write
+
+    name: Build and Test
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        with:
+          fetch-depth: 0
+
+      - name: Setup DotNet
+        uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a
+        with:
+          global-json-file: global.json
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@f31a31c052207cc13b328d6295c5b728bb49568c
+        with:
+          languages: csharp
+          queries: +security-extended
+
+      - name: Restore dependencies
+        run: dotnet restore src/GitHubActions.Gates.Samples.sln
+
+      - name: sonar begin
+        if: github.actor != 'dependabot[bot]'      
+        run: |
+          dotnet tool install --global dotnet-sonarscanner --version 5.13.0
+          dotnet sonarscanner begin \
+          /o:${{ vars.SONAR_ORG }} \
+          /k:tspascoal_GitHubActions.Gates.Samples \
+          /d:sonar.host.url=https://sonarcloud.io      
+
+      - name: Build
+        run: dotnet build src/GitHubActions.Gates.Samples.sln --no-restore /p:TreatWarningsAsErrors=true
+
+      - name: Unit Tests
+        if: github.actor != 'dependabot[bot]'      
+        run: dotnet test src/GitHubActions.Gates.Samples.sln --no-build --verbosity normal --logger:"junit;LogFilePath=unit-tests.xml" --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@f31a31c052207cc13b328d6295c5b728bb49568c
+        with:
+          category: "/language:csharp"
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@4e7013f9576bd22ffdae979dc6e68cb9ec2aeece
+        if: always() && github.actor != 'dependabot[bot]'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          check_name: Tests Results
+          files: '**/unit-tests.xml'
+          report_individual_runs: true
+          deduplicate_classes_by_file_name: false
+
+      - name: Merge coverage reports
+        run: |
+          dotnet tool install --global dotnet-coverage
+          cd coverage
+          dotnet-coverage merge -o ${{github.workspace}}/coverage/coverage-merged.xml -f cobertura -r coverage.cobertura.xml
+
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@51cc3a756ddcd398d447c044c02cb6aa83fdae95
+        if: always() && github.actor != 'dependabot[bot]'
+        with:
+          filename: coverage/coverage-merged.xml
+          badge: true
+          format: 'markdown'
+          output: 'both'
+
+      - name: Add code coverage to summary
+        if: always() && github.actor != 'dependabot[bot]'
+        run: |
+          echo "## Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@f61b6cf21ef2fcc468f4345cdfcc9bda741d2343
+        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
+        with:
+          recreate: true
+          path: code-coverage-results.md
+
+      - name: sonar end
+        if: github.actor != 'dependabot[bot]'
+        run: dotnet sonarscanner end
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  

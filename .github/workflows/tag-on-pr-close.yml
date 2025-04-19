@@ -1,0 +1,40 @@
+name: Tag on PR Close
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  tag:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set TAG_NAME
+        id: tag_name
+        run: echo "TAG_NAME=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+      - name: Authenticate with GitHub App
+        id: auth
+        uses: tibdex/github-app-token@v2.1.0
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Create and push tag
+        env:
+          GITHUB_TOKEN: ${{ steps.auth.outputs.token }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          echo $TAG_NAME
+          git tag $TAG_NAME
+          git push https://x-access-token:${{ steps.auth.outputs.token }}@github.com/${{ github.repository }}.git $TAG_NAME

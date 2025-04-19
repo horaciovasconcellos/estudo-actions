@@ -1,0 +1,19 @@
+name: Update Image in the k8s .yaml file
+on:
+  repository_dispatch:
+    types: [update-image]
+jobs:
+  update-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Update Image Version kube.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'k8s/deployment.yaml'
+          propertyPath: 'spec.template.spec.containers[0].image'
+          value: 12345678910.dkr.ecr.us-west-2.amazonaws.com/${{ github.event.client_payload.image }}
+          branch: main
+          message: "Update Image Version to ${{ github.event.client_payload.image }}"

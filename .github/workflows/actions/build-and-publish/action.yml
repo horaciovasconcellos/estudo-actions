@@ -1,0 +1,44 @@
+name: "Build and Publish .NET Core App"
+description: "Composite action to build and publish a .NET Core application"
+inputs:
+  dotnet-version:
+    description: "The version of .NET Core to use"
+    required: true
+  project-path:
+    description: "The path to the .NET Core project file"
+    required: true
+  output-path:
+    description: "The output path for the published application"
+    required: true
+outputs:
+  artifact-path:
+    description: "The path to the build artifact"
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4.1.0
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Restore dependencies
+      run: dotnet restore "${{ inputs.project-path }}"
+      shell: bash
+
+    - name: Build
+      run: dotnet build "${{ inputs.project-path }}" --no-restore --configuration Release
+      shell: bash
+
+    - name: Publish
+      run: dotnet publish "${{ inputs.project-path }}" -c Release -o ${{ inputs.output-path }}
+      shell: bash
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: myapp
+        path: ${{ inputs.output-path }}/**
+        if-no-files-found: error

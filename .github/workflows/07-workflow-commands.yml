@@ -1,0 +1,29 @@
+name: Workflow Commands Demo
+
+on: ['push'] # This workflow will run on push events
+
+jobs:
+  workflow-commands:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Group Logging"
+        run: |
+          echo "::group::My Group Message"
+          echo "message 1"
+          echo "message 2"
+          echo "::endgroup::"
+      - name: "step 1"
+        run: |
+          echo "MY_VALUE=hello" >> $GITHUB_ENV
+      - name: "step 2"
+        run: |
+          echo "This is $MY_VALUE"
+      - id: set-output
+        name: "Generate, Mask and Output"
+        run: |
+          the_secret=$((RANDOM))
+          echo "::add-mask::$the_secret"
+          echo "secret-number=$the_secret" >> "$GITHUB_OUTPUT"
+      - name: Use the secret output (protected by mask)
+        run: |
+          echo "The secret number is ${{ steps.set-output.outputs.secret-number }}"
