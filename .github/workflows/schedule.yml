@@ -1,9 +1,10 @@
 name: Add comment to PR
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
-
+##  schedule:
+#    - cron: '*/5 * * * *'
+  workflow_dispatch:
+  
 jobs:
   comment:
     runs-on: ubuntu-latest
