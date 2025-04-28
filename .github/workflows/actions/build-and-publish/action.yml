@@ -13,6 +13,9 @@ inputs:
 outputs:
   artifact-path:
     description: "The path to the build artifact"
+on:
+  workflow_dispatch:
+  
 runs:
   using: "composite"
   steps:
