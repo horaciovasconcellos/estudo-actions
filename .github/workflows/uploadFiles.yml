@@ -16,7 +16,7 @@ jobs:
 
       - name: Get changed checklist files
         id: changed-checklist-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             checklist-files/**
@@ -30,7 +30,7 @@ jobs:
           done
       - name: Get changed compliance scan files
         id: changed-compliancescan-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             compliance-scans/**
@@ -44,7 +44,7 @@ jobs:
           done
       - name: Get changed patch scan files
         id: changed-patchscan-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             patch-scans/**
@@ -58,7 +58,7 @@ jobs:
           done
       - name: Get changed compliance statement files
         id: changed-compliancestatement-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             compliance-statements/**
@@ -72,7 +72,7 @@ jobs:
           done
       - name: Get changed mitigation statement files
         id: changed-mitigationstatement-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             mitigation-statements/**
@@ -86,7 +86,7 @@ jobs:
           done
       - name: Get changed hardware list files
         id: changed-hardwarelist-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             hardware/**
@@ -100,7 +100,7 @@ jobs:
           done
       - name: Get changed software list files
         id: changed-softwarelist-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             software/**
@@ -114,7 +114,7 @@ jobs:
           done
       - name: Get changed PPSM list files
         id: changed-ppsmlist-files
-        uses: tj-actions/changed-files@v42
+        uses: tj-actions/changed-files@v46
         with:
           files: |
             ppsm/**
